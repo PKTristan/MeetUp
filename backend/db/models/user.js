@@ -42,7 +42,7 @@ module.exports = (sequelize, DataTypes) => {
         email,
         hashedPassword
       });
-      return await User.scope('currentUser').fingByPk(user.id);
+      return await User.scope('currentUser').findByPk(user.id);
     }
 
     static associate(models) {
@@ -57,7 +57,7 @@ module.exports = (sequelize, DataTypes) => {
       validate: {
         len: [4, 30],
         isNotEmail(value) {
-          if (validator.isEmail(value)) {
+          if (Validator.isEmail(value)) {
             throw new Error("Cannot be an email.");
           }
         }
