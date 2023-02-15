@@ -7,16 +7,16 @@ const bcrypt = require('bcryptjs');
 
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
-    static toSafeObject() {
+    toSafeObject() {
       const { id, username, email } = this;
       return { id, username, email };
     }
 
-    static validatePassword(password) {
+    validatePassword(password) {
       return bcrypt.compareSync(password, this.hashedPassword.toString());
     }
 
-    static getCurrentUserById(id) {
+    getCurrentUserById(id) {
       return User.scope('currentUser').findByPk(id);
     }
 
