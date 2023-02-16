@@ -14,7 +14,6 @@ const setTokenCookie = (res, user) => {
         { expiresIn: parseInt(expiresIn) }
     );
 
-    console.log(secret);
     const isProduction = process.env.NODE_ENV === 'production';
 
     //Set the token cookie
@@ -41,7 +40,6 @@ const restoreUser = (req, res, next) => {
 
         try {
             const { id } = jwtPayload.data;
-            console.log(secret);
             req.user = await User.scope('currentUser').findByPk(id);
         } catch (e) {
             res.clearCookies('token');
