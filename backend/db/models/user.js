@@ -8,8 +8,8 @@ const bcrypt = require('bcryptjs');
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     toSafeObject() {
-      const { id, username, email } = this;
-      return { id, username, email };
+      const { id, username, firstName, lastName, email } = this;
+      return { id, username, firstName, lastName, email };
     }
 
     validatePassword(password) {
@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
       return User.scope('currentUser').findByPk(id);
     }
 
-    static async login({credential, password}) {
+    static async login({ credential, password }) {
       const { Op } = require('sequelize');
       const user = await User.scope('loginUser').findOne({
         where: {
@@ -35,15 +35,36 @@ module.exports = (sequelize, DataTypes) => {
       }
     }
 
-    static async signup({ username, email, password }) {
+    static async signup({ username, email, firstName, lastName, password }) {
       const hashedPassword = bcrypt.hashSync(password);
-      const user = await User.create({
-        username,
-        email,
-        hashedPassword
-      });
-      return await User.scope('currentUser').findByPk(user.id);
+      try {
+        const user = await User.create({
+          username,
+          firstName,
+          lastName,
+          email,
+          hashedPassword
+        });
+        return await User.scope('currentUser').findByPk(user.id);
+      } catch (e) {
+        if (e.name === 'SequelizeUniqueConstraintError') {
+          const err = new Error('User already exists');
+          err.status = 403;
+          if (e.fields.email) {
+            err.errors = { email: 'User with that email already exists' };
+          }
+
+          if (e.fields.username) {
+            err.errors.username = 'User with that username already exists';
+          }
+
+          throw err;
+        }
+        else throw e;
+      }
+
     }
+
 
     static associate(models) {
       // define association here

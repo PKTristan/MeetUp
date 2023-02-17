@@ -54,14 +54,41 @@ const restoreUser = (req, res, next) => {
 
 
 // if not current user, then return error
-const requireAuth = function (req, _res, next) {
-    if (req.user) return next();
+const requireAuth = async function (req, _res, next) {
+    const { token } = req.cookies;
+
+    //create err for unauthorized
+    const err = new Error('Unauthorized');
+    err.title = 'Unauthorized';
+    err.errors = ['Unauthorized'];
+    err.status = 401;
+
+    if (!token) {
+        return next(err);
+    }
+
+    try {
+        const decodedToken = jwt.verify(token, secret);
+        const user = await User.findByPk(decodedToken.id);
+
+        if (!user) {
+            return next(err);
+        }
+
+        req.user = user;        //set current auth user
+        return next();
+    } catch(error) {
+        error.status = 401;
+        return next(error);
+    }
+
+    /* if (req.user) return next();
 
     const err = new Error('Unauthorized');
     err.title = 'Unauthorized';
     err.errors = ['Unauthorized'];
     err.status = 401;
-    return next(err);
+    return next(err); */
 };
 
 module.exports = { setTokenCookie, restoreUser, requireAuth };
