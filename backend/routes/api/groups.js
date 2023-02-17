@@ -11,5 +11,26 @@ const router = express.Router();
 
 //get all groups
 router.get('/', async (req, res) => {
+   /* const groups = await Group.findAll({
+        attributes: {
+            include: [
+                [
+                    Sequelize.literal(
+                        '(SELECT COUNT(*) FROM Memberships WHERE Membershipd.groupId = Group.id)'
+                    ),
+                    'numMembers'
+                ]
+            ]
+        },
+        order: [['id', 'ASC']],
+        include: GroupImage,
+        attributes: ['previewImage']
+    });
+    */
 
+    const groups = await Group.findAll();
+
+    return res.json(groups);
 });
+
+module.exports = router;
