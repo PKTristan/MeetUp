@@ -47,7 +47,7 @@ module.exports = (sequelize, DataTypes) => {
         });
         return await User.scope('currentUser').findByPk(user.id);
       } catch (e) {
-        if (e.name === 'SequelizeUniqueConstraintError') {
+        if (e.fields.email || e.fields.username) {
           const err = new Error('User already exists');
           err.status = 403;
           if (e.fields.email) {
