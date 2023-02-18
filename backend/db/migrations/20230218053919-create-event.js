@@ -26,19 +26,24 @@ module.exports = {
         }
       },
       name: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNUll:false
       },
       type: {
-        type: Sequelize.ENUM('Online', 'In Person')
+        type: Sequelize.ENUM('Online', 'In Person'),
+        allowNull: false
       },
       startDate: {
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        allowNull: false
       },
       endDate: {
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        allowNull: false
       },
       numAttending: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        alowNull: false
       },
       createdAt: {
         allowNull: false,
