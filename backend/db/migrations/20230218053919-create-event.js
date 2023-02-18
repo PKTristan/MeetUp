@@ -10,16 +10,26 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       groupId: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'Groups',
+          key: 'id'
+        }
       },
       venueId: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'Venues',
+          key: 'id'
+        }
       },
       name: {
         type: Sequelize.STRING
       },
       type: {
-        type: Sequelize.ENUM
+        type: Sequelize.ENUM('Online', 'In Person')
       },
       startDate: {
         type: Sequelize.DATE
@@ -32,11 +42,13 @@ module.exports = {
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       }
     });
   },
