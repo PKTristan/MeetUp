@@ -5,12 +5,21 @@ const {
 module.exports = (sequelize, DataTypes) => {
   class Group extends Model {
 
-    
+
 
 
     static associate(models) {
       Group.belongsTo(models.User, {
         foreignKey: 'organizerId'
+      });
+
+      Group.hasMany(models.GroupImage, {
+        foreignKey: 'groupId'
+      });
+
+      Group.belongsToMany(models.GroupImage, {
+        through: models.Membership,
+        foreignKey: 'groupId'
       });
     }
   }

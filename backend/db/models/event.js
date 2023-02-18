@@ -13,7 +13,11 @@ module.exports = (sequelize, DataTypes) => {
       Event.belongsToMany(models.User, {
         through: models.Attendance,
         foreignKey: 'eventId'
-      })
+      });
+
+      Event.hasMany(models.EventImage, {
+        foreignKey: 'eventId'
+      });
     }
   }
   Event.init({

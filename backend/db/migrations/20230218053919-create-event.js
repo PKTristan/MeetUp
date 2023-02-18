@@ -1,5 +1,14 @@
 'use strict';
+
+const { QueryError } = require('sequelize');
+
 /** @type {import('sequelize-cli').Migration} */
+
+let options = {};
+if (process.env.NODE_ENV === 'production') {
+  options.schema = process.env.SCHEMA;    // define schema in options object
+}
+
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('Events', {
@@ -15,7 +24,9 @@ module.exports = {
         references: {
           model: 'Groups',
           key: 'id'
-        }
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       },
       venueId: {
         type: Sequelize.INTEGER,
@@ -23,7 +34,9 @@ module.exports = {
         references: {
           model: 'Venues',
           key: 'id'
-        }
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       },
       name: {
         type: Sequelize.STRING,
@@ -55,9 +68,11 @@ module.exports = {
         type: Sequelize.DATE,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       }
-    });
+    }, options);
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Events');
+    await queryInterface.removeConstraint('Events', 'Events_groupId_fkey', options);
+    await queryInterface.removeConstraint('Events', 'Events_venueId_fkey', options);
+    await queryInterface.dropTable('Events', options);
   }
 };

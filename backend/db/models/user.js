@@ -75,6 +75,11 @@ module.exports = (sequelize, DataTypes) => {
         through: models.Attendance,
         foreignKey: 'userId'
       });
+
+      User.belongsToMany(models.Group, {
+        through: models.Membership,
+        foreignKey: 'userId'
+      });
     }
   };
 

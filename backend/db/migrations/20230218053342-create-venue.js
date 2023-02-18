@@ -1,5 +1,11 @@
 'use strict';
 /** @type {import('sequelize-cli').Migration} */
+
+let options = {};
+if (process.env.NODE_ENV === 'production') {
+  options.schema = process.env.SCHEMA;    // define schema in options object
+}
+
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('Venues', {
@@ -22,11 +28,11 @@ module.exports = {
         allowNull: false
       },
       latitude: {
-        type: Sequelize.STRING,
+        type: Sequelize.DECIMAL(9, 6),
         allowNull:false
       },
       longitude: {
-        type: Sequelize.STRING,
+        type: Sequelize.DECIMAL(9, 6),
         allowNull: false
       },
       groupId: {
@@ -35,7 +41,9 @@ module.exports = {
         references: {
           model: 'Groups',
           key: 'id'
-        }
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       },
       createdAt: {
         allowNull: false,
@@ -47,9 +55,10 @@ module.exports = {
         type: Sequelize.DATE,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       }
-    });
+    }, options);
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Venues');
+    await queryInterface.removeConstraint('Venues', 'Venues_groupId_fkey', options);
+    await queryInterface.dropTable('Venues', options);
   }
 };

@@ -1,5 +1,11 @@
 'use strict';
 /** @type {import('sequelize-cli').Migration} */
+
+let options = {};
+if (process.env.NODE_ENV === 'production') {
+  options.schema = process.env.SCHEMA;    // define schema in options object
+}
+
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('Groups', {
@@ -15,7 +21,9 @@ module.exports = {
         references: {
           model: 'Users',
           key: 'id'
-        }
+        },
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE'
       },
       name: {
         type: Sequelize.STRING(60),
@@ -54,26 +62,11 @@ module.exports = {
         type: Sequelize.DATE,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       }
-    });
-
-    // add foreign key constraint
-    await queryInterface.addConstraint('Groups', {
-      fields: ['organizerId'],
-      type: 'foreign key',
-      name: 'Groups_organizerId_fkey',
-      references: {
-        table: 'Users',
-        field: 'id'
-      },
-      onDelete: 'CASCADE',
-      onUpdate: 'CASCADE'
-    });
+    }, options);
   },
 
   async down(queryInterface, Sequelize) {
-    // remove foreign key constraint
-    await queryInterface.removeConstraint('Groups', 'Groups_organizerId_fkey');
-
-    await queryInterface.dropTable('Groups');
+    await queryInterface.removeConstraint('Groups', 'Groups_organizerId_fkey', options);
+    await queryInterface.dropTable('Groups', options);
   }
 };
