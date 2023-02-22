@@ -29,13 +29,34 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Event.init({
-    groupId: DataTypes.INTEGER,
-    venueId: DataTypes.INTEGER,
-    name: DataTypes.STRING,
-    type: DataTypes.ENUM,
-    startDate: DataTypes.STRING,
-    endDate: DataTypes.STRING,
-    numAttending: DataTypes.INTEGER
+    groupId: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    venueId: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    type: {
+      type: DataTypes.ENUM,
+      allowNull: false
+    },
+    startDate: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    endDate: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    numAttending: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    }
   }, {
     sequelize,
     modelName: 'Event',
