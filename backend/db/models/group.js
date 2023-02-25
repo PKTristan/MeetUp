@@ -4,7 +4,15 @@ const {
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class Group extends Model {
-
+    static async addGroup(groupObj) {
+      try {
+        const group = await Group.create(groupObj);
+        return group;
+      }
+      catch(e) {
+        throw e;
+      }
+    }
 
 
 

@@ -41,4 +41,90 @@ router.get('/', async (req, res, next) => {
     }
 });
 
+//get all groups organized or joined by current user
+router.get('/current', async(req, res, next) => {
+    const { user } = req;
+
+    try {
+        const groups = await Group.findAll({
+            attributes: {
+                include: [
+                    // count number of users in group
+                    [
+                        Sequelize.literal(
+                            `(SELECT COUNT(*) FROM "Memberships" WHERE "Memberships"."groupId" = "Group"."id")`
+                        ),
+                        'numMembers',
+                    ],
+                    // preview image URL
+                    [
+                        Sequelize.literal(
+                            `(SELECT "url" FROM "GroupImages" WHERE "GroupImages"."groupId" = "Group"."id" AND "GroupImages"."preview" = true)`
+                        ),
+                        'previewImage',
+                    ]
+                ]
+            },
+            where: {
+                organizerId: user.id
+            }
+        });
+
+        if (groups)
+
+        return res.json({ Groups: groups });
+    }
+    catch (error) {
+        next(error);
+    }
+});
+
+//validateGroup
+const validateGroup = [
+    check('name')
+        .exists( { checkFalsy: true})
+        .withMessage('Please provide a group name'),
+    check('about')
+        .exists({checkFalsy: true})
+        .isLength({min: 60})
+        .withMessage('Please provide 60 words about this group.'),
+    check('type')
+        .exists({checkFalsy: true})
+        .withMessage('Please pick Online or In Person.'),
+    check('private')
+        .exists({checkFalsy: true})
+        .withMessage('Please provide true or false'),
+    check('city')
+        .exists({checkFalsy: true})
+        .withMessage('Please provide the name of a city'),
+    check('state')
+        .exists({checkFalsy: true})
+        .withMessage('Please provide a state name'),
+    handleValidationErrors
+];
+
+//create a group
+router.post('/', validateGroup, async (req, res, next) => {
+    try {
+        const organizerId = req.user.id;
+        const { name, about, private, city, state} = req.body;
+        let {type} = req.body;
+
+        const typeLow = type.toLowerCase();
+        if (typeLow === 'online') {
+            type = 'Online';
+        }
+        else if (typeLow === 'in person') {
+            type = 'In Person';
+        }
+
+        const group = await Group.addGroup({ organizerId, name, about, type, private, city, state });
+
+        return res.json({group});
+    }
+    catch (errors) {
+        next(errors);
+    }
+});
+
 module.exports = router;
