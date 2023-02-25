@@ -4,33 +4,41 @@ const express = require('express');
 const { requireAuthentication } = require('../../utils/auth');
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
-const { Group } = require('../../db/models');
+const { Group, User} = require('../../db/models');
+const { Sequelize } = require('sequelize');
 
 const router = express.Router();
 
 
 //get all groups
-router.get('/', async (req, res) => {
-   /* const groups = await Group.findAll({
-        attributes: {
-            include: [
-                [
-                    Sequelize.literal(
-                        '(SELECT COUNT(*) FROM Memberships WHERE Membershipd.groupId = Group.id)'
-                    ),
-                    'numMembers'
+router.get('/', async (req, res, next) => {
+    try {
+        const groups = await Group.findAll({
+            attributes: {
+                include: [
+                    // count number of users in group
+                    [
+                        Sequelize.literal(
+                            `(SELECT COUNT(*) FROM "Memberships" WHERE "Memberships"."groupId" = "Group"."id")`
+                        ),
+                        'numMembers',
+                    ],
+                    // preview image URL
+                    [
+                        Sequelize.literal(
+                            `(SELECT "url" FROM "GroupImages" WHERE "GroupImages"."groupId" = "Group"."id" AND "GroupImages"."preview" = true)`
+                        ),
+                        'previewImage',
+                    ]
                 ]
-            ]
-        },
-        order: [['id', 'ASC']],
-        include: GroupImage,
-        attributes: ['previewImage']
-    });
-    */
+            }
+        });
 
-    const groups = await Group.findAll();
-
-    return res.json(groups);
+        return res.json({ Groups: groups });
+    }
+    catch (error) {
+        next(error);
+    }
 });
 
 module.exports = router;

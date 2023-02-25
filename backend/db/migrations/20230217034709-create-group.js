@@ -18,7 +18,7 @@ module.exports = {
       },
       organizerId: {
         type: Sequelize.INTEGER,
-        allownull: false,
+        allowNull: false,
         references: {
           model: 'Users',
           key: 'id',
@@ -37,7 +37,7 @@ module.exports = {
         type: Sequelize.TEXT,
         allowNull: false,
         validate: {
-          len: [5, Infinity]
+          len: [60, Infinity]
         }
       },
       type: {
