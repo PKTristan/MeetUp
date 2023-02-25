@@ -11,6 +11,7 @@ if (process.env.NODE_ENV === 'production') {
 
 module.exports = {
   async up(queryInterface, Sequelize) {
+    options.order = 5;
     await queryInterface.createTable('Events', {
       id: {
         allowNull: false,
@@ -23,20 +24,27 @@ module.exports = {
         allowNull: false,
         references: {
           model: 'Groups',
-          key: 'id'
+          key: 'id',
+          name: 'Events_groupId_fkey',
+          rules: {
+            onUpdate: 'CASCADE',
+            onDelete: 'CASCADE'
+          }
         },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE'
+
       },
       venueId: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
           model: 'Venues',
-          key: 'id'
+          key: 'id',
+          name: 'Events_venueId_fkey',
+          rules: {
+            onUpdate: 'CASCADE',
+            onDelete: 'CASCADE'
+          }
         },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE'
       },
       name: {
         type: Sequelize.STRING,
@@ -71,8 +79,9 @@ module.exports = {
     }, options);
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.removeConstraint('Events', 'Events_groupId_fkey', options);
-    await queryInterface.removeConstraint('Events', 'Events_venueId_fkey', options);
+    options.order = 4;
+    // await queryInterface.removeConstraint('Events', 'Events_groupId_fkey', options);
+    // await queryInterface.removeConstraint('Events', 'Events_venueId_fkey', options);
     await queryInterface.dropTable('Events', options);
   }
 };

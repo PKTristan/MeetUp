@@ -8,6 +8,7 @@ if (process.env.NODE_ENV === 'production') {
 
 module.exports = {
   async up(queryInterface, Sequelize) {
+    options.order = 8;
     await queryInterface.createTable('EventImages', {
       id: {
         allowNull: false,
@@ -20,10 +21,14 @@ module.exports = {
         allowNull: false,
         references: {
           model: 'Events',
-          key: 'id'
+          key: 'id',
+          name: 'EventImages_eventId_fkey',
+          rules: {
+            onUpdate: 'CASCADE',
+            onDelete: 'CASCADE'
+          }
         },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE'
+
       },
       preview: {
         type: Sequelize.BOOLEAN,
@@ -46,7 +51,8 @@ module.exports = {
     }, options);
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.removeConstraint('EventImages', 'EventImages_eventId_fkey', options);
+    options.order = 1;
+    // await queryInterface.removeConstraint('EventImages', 'EventImages_eventId_fkey', options);
     await queryInterface.dropTable('EventImages', options);
   }
 };

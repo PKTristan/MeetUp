@@ -8,6 +8,7 @@ if (process.env.NODE_ENV === 'production') {
 
 module.exports = {
   async up(queryInterface, Sequelize) {
+    options.order = 6;
     await queryInterface.createTable('Attendances', {
       id: {
         allowNull: false,
@@ -20,20 +21,26 @@ module.exports = {
         allowNull: false,
         references: {
           model: 'Users',
-          key: 'id'
+          key: 'id',
+          name: 'Attendance_userId_fkey',
+          rules: {
+            onUpdate: 'CASCADE',
+            onDelete: 'CASCADE'
+          }
         },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE'
       },
       eventId: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
           model: 'Events',
-          key: 'id'
+          key: 'id',
+          name: 'Attendance_eventId_fkey',
+          rules: {
+            onUpdate: 'CASCADE',
+            onDelete: 'CASCADE'
+          }
         },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE'
       },
       status: {
         type: Sequelize.STRING,
@@ -52,8 +59,9 @@ module.exports = {
     }, options);
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.removeConstraint('Attendances', 'Attendances_userId_fkey', options);
-    await queryInterface.removeConstraint('Attendances', 'Attendance_eventId_fkey', options);
+    options.order = 3;
+    // await queryInterface.removeConstraint('Attendances', 'Attendances_userId_fkey', options);
+    // await queryInterface.removeConstraint('Attendances', 'Attendance_eventId_fkey', options);
     await queryInterface.dropTable('Attendances', options);
   }
 };

@@ -5,11 +5,12 @@
 let options = {};
 if (process.env.NODE_ENV === 'production') {
   options.schema = process.env.SCHEMA; // schema in options
-}
+};
 
 module.exports = {
   async up (queryInterface, Sequelize) {
     options.tableName = 'Groups';
+    options.order = 2;
     return queryInterface.bulkInsert(options, [
       {
         organizerId: 1,
@@ -38,14 +39,13 @@ module.exports = {
         city: "New York",
         state: "NY"
       }
-    ], {});
+    ], options);
   },
 
   async down (queryInterface, Sequelize) {
     options.tableName = 'Groups';
+    options.order = 7;
     const Op = Sequelize.Op;
-    return queryInterface.bulkDelete(options, {
-      //
-    }, {});
+    return queryInterface.bulkDelete(options);
   }
 };

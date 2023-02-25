@@ -4,10 +4,11 @@
 let options = {};
 if (process.env.NODE_ENV === 'production') {
   options.schema = process.env.SCHEMA;    // define schema in options object
-}
+};
 
 module.exports = {
   async up(queryInterface, Sequelize) {
+    options.order = 2;
     await queryInterface.createTable('Groups', {
       id: {
         allowNull: false,
@@ -20,10 +21,13 @@ module.exports = {
         allownull: false,
         references: {
           model: 'Users',
-          key: 'id'
+          key: 'id',
+          name: 'Groups_organizerId_fkey',
+          rules: {
+            onUpdate: 'CASCADE',
+            onDelete: 'CASCADE'
+          }
         },
-        onDelete: 'CASCADE',
-        onUpdate: 'CASCADE'
       },
       name: {
         type: Sequelize.STRING(60),
@@ -66,7 +70,8 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.removeConstraint('Groups', 'Groups_organizerId_fkey', options);
+    options.order = 7;
+    // await queryInterface.removeConstraint('Groups', 'Groups_organizerId_fkey', options);
     await queryInterface.dropTable('Groups', options);
   }
 };
