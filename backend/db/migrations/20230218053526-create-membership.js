@@ -23,11 +23,9 @@ module.exports = {
           model: 'Users',
           key: 'id',
           name: 'Memberships_userId_fkey',
-          rules: {
-            onUpdate: 'CASCADE',
-            onDelete: 'CASCADE'
-          }
         },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       },
       groupId: {
         type: Sequelize.INTEGER,
@@ -36,14 +34,12 @@ module.exports = {
           model: 'Groups',
           key: 'id',
           name: 'Memberships_groupId_fkey',
-          rules: {
-            onUpdate: 'CASCADE',
-            onDelete: 'CASCADE'
-          }
         },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       },
       status: {
-        type: Sequelize.STRING,
+        type: Sequelize.ENUM('pending', 'approved', 'denied'),
         allowNull: false
       },
       createdAt: {

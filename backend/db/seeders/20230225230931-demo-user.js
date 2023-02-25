@@ -10,7 +10,7 @@ if (process.env.NODE_ENV === 'production') {
 };
 
 module.exports = {
-  async up (queryInterface, Sequelize) {
+  async up(queryInterface, Sequelize) {
     options.tableName = 'Users';
     options.order = 1;
     return queryInterface.bulkInsert(options, [
@@ -38,7 +38,7 @@ module.exports = {
     ], options);
   },
 
-  async down (queryInterface, Sequelize) {
+  async down(queryInterface, Sequelize) {
     options.tableName = 'Users';
     options.order = 8;
     const Op = Sequelize.Op;

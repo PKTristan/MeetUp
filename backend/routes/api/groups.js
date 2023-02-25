@@ -5,7 +5,7 @@ const { requireAuthentication } = require('../../utils/auth');
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 const { Group, User} = require('../../db/models');
-const { Sequelize } = require('sequelize');
+const { Sequelize, Op } = require('sequelize');
 
 const router = express.Router();
 
@@ -66,7 +66,14 @@ router.get('/current', async(req, res, next) => {
                 ]
             },
             where: {
-                organizerId: user.id
+                [Op.or]: {
+                    organizerId: user.id,
+                    id: [
+                        Sequelize.literal(
+                            `SELECT "groupId" FROM "Memberships" WHERE "Memberships"."userId" = ${user.id} AND "Memberships"."status" = "approved"`
+                        )
+                    ]
+                }
             }
         });
 

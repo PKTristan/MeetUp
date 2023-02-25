@@ -43,11 +43,9 @@ module.exports = {
           model: 'Groups',
           key: 'id',
           name: 'Venues_groupId_fkey',
-          rules: {
-            onUpdate: 'CASCADE',
-            onDelete: 'CASCADE'
-          }
         },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       },
       createdAt: {
         allowNull: false,

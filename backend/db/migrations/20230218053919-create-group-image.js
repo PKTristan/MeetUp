@@ -23,11 +23,9 @@ module.exports = {
           model: 'Groups',
           key: 'id',
           name: 'GroupImages_groupId_fkey',
-          rules: {
-            onUpdate: 'CASCADE',
-            onDelete: 'CASCADE'
-          }
         },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       },
       preview: {
         type: Sequelize.BOOLEAN,

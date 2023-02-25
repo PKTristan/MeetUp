@@ -23,11 +23,9 @@ module.exports = {
           model: 'Users',
           key: 'id',
           name: 'Groups_organizerId_fkey',
-          rules: {
-            onUpdate: 'CASCADE',
-            onDelete: 'CASCADE'
-          }
         },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       },
       name: {
         type: Sequelize.STRING(60),

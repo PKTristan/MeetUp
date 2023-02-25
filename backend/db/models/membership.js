@@ -9,6 +9,7 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
+
     static associate(models) {
       Membership.belongsTo(models.User, {
         foreignKey: 'userId'
@@ -29,7 +30,8 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     status: {
-      type: DataTypes.STRING,
+      type: DataTypes.ENUM,
+      values: ['pending', 'approved', 'denied'],
       allowNull: false
     }
   }, {

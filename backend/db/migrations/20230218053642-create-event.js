@@ -26,11 +26,9 @@ module.exports = {
           model: 'Groups',
           key: 'id',
           name: 'Events_groupId_fkey',
-          rules: {
-            onUpdate: 'CASCADE',
-            onDelete: 'CASCADE'
-          }
         },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
 
       },
       venueId: {
@@ -40,11 +38,9 @@ module.exports = {
           model: 'Venues',
           key: 'id',
           name: 'Events_venueId_fkey',
-          rules: {
-            onUpdate: 'CASCADE',
-            onDelete: 'CASCADE'
-          }
         },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       },
       name: {
         type: Sequelize.STRING,

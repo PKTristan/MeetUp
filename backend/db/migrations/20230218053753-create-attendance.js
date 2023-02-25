@@ -23,11 +23,9 @@ module.exports = {
           model: 'Users',
           key: 'id',
           name: 'Attendance_userId_fkey',
-          rules: {
-            onUpdate: 'CASCADE',
-            onDelete: 'CASCADE'
-          }
         },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       },
       eventId: {
         type: Sequelize.INTEGER,
@@ -36,14 +34,12 @@ module.exports = {
           model: 'Events',
           key: 'id',
           name: 'Attendance_eventId_fkey',
-          rules: {
-            onUpdate: 'CASCADE',
-            onDelete: 'CASCADE'
-          }
         },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       },
       status: {
-        type: Sequelize.STRING,
+        type: Sequelize.ENUM('Going', 'Not Going', 'Interested'),
         allowNull: false
       },
       createdAt: {

@@ -23,11 +23,9 @@ module.exports = {
           model: 'Events',
           key: 'id',
           name: 'EventImages_eventId_fkey',
-          rules: {
-            onUpdate: 'CASCADE',
-            onDelete: 'CASCADE'
-          }
         },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
 
       },
       preview: {
