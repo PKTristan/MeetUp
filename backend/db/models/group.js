@@ -63,6 +63,25 @@ module.exports = (sequelize, DataTypes) => {
       }
     };
 
+    //edits a group
+    static async editGroup(editObj, groupId) {
+      try {
+        await Group.update(editObj, {
+          where: {
+            id: groupId
+          }
+        });
+
+        const group = await Group.findByPk(groupId);
+
+        console.log(group);
+        return group;
+      }
+      catch (err) {
+        throw err;
+      }
+    };
+
 
     static associate(models) {
       Group.belongsTo(models.User, {

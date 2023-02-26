@@ -180,6 +180,18 @@ const validateGroup = [
     handleValidationErrors
 ];
 
+//validate in person or online
+const validateType = (typeLow) => {
+    if (typeLow === 'online') {
+        return 'Online';
+    }
+    else if(typeLow === 'in person') {
+        return 'In Person';
+    }
+
+    throw new Error('not a valid type of event');
+};
+
 //create a group
 router.post('/', validateGroup, requireAuthentication, async (req, res, next) => {
     try {
@@ -188,12 +200,8 @@ router.post('/', validateGroup, requireAuthentication, async (req, res, next) =>
         let { type } = req.body;
 
         const typeLow = type.toLowerCase();
-        if (typeLow === 'online') {
-            type = 'Online';
-        }
-        else if (typeLow === 'in person') {
-            type = 'In Person';
-        }
+
+        type = validateType(typeLow);
 
         const group = await Group.addGroup({ organizerId, name, about, type, private, city, state });
 
@@ -203,5 +211,46 @@ router.post('/', validateGroup, requireAuthentication, async (req, res, next) =>
         next(errors);
     }
 });
+
+//add roles for editing
+const addEditRoles = async(req, res, next) => {
+    req.roles = {
+        organizer: true,
+        groupId: req.params.groupId
+    }
+
+    next();
+};
+
+
+//edit a group
+router.put('/:groupId', validateGroup, requireAuthentication, exists, addEditRoles, requireAuthorization,
+    async (req, res, next) => {
+        const {name, about, type, private, city, state} = req.body;
+        const temp = { name, about, type, private, city, state };
+        let editObj = {};
+
+        for (const prop in temp) {
+            if (temp[prop]) {
+                console.log(`${prop}: ${temp[prop]}`);
+                editObj[prop] = temp[prop];
+            }
+        }
+
+        if (editObj.type) {
+            const typeLow = editObj.type.toLowerCase();
+            editObj.type = validateType(typeLow);
+        }
+
+        try{
+            const group = await Group.editGroup(editObj, req.params.groupId);
+
+            return res.json(group);
+        }
+        catch (err) {
+            next(err);
+        }
+    });
+
 
 module.exports = router;
