@@ -112,28 +112,29 @@ router.get('/:groupId', async (req, res, next) => {
 const validateGroup = [
     check('name')
         .exists( { checkFalsy: true})
-        .withMessage('Please provide a group name'),
+        .isLength({max: 60})
+        .withMessage('Name must be 60 characters or less'),
     check('about')
         .exists({checkFalsy: true})
-        .isLength({min: 60})
-        .withMessage('Please provide 60 words about this group.'),
+        .isLength({min: 50})
+        .withMessage('About must be 50 characters or more'),
     check('type')
         .exists({checkFalsy: true})
-        .withMessage('Please pick Online or In Person.'),
+        .withMessage("Type must be 'Online' or 'In person'"),
     check('private')
         .exists({checkFalsy: true})
-        .withMessage('Please provide true or false'),
+        .withMessage('Private must be a boolean'),
     check('city')
         .exists({checkFalsy: true})
-        .withMessage('Please provide the name of a city'),
+        .withMessage('City is required'),
     check('state')
         .exists({checkFalsy: true})
-        .withMessage('Please provide a state name'),
+        .withMessage('State is required'),
     handleValidationErrors
 ];
 
 //create a group
-router.post('/', validateGroup, async (req, res, next) => {
+router.post('/', validateGroup, requireAuthentication, async (req, res, next) => {
     try {
         const organizerId = req.user.id;
         const { name, about, private, city, state} = req.body;
@@ -149,7 +150,7 @@ router.post('/', validateGroup, async (req, res, next) => {
 
         const group = await Group.addGroup({ organizerId, name, about, type, private, city, state });
 
-        return res.json({group});
+        return res.status(201).json({group});
     }
     catch (errors) {
         next(errors);
