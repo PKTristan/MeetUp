@@ -9,6 +9,24 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
+
+    static async addImage(imgObj) {
+      try {
+        const image = await GroupImage.create(imgObj);
+
+        const img = await GroupImage.findByPk(image.id, {
+          attributes: {
+            exclude: ['groupId', 'createdAt', 'updatedAt']
+          }
+        });
+
+        return img;
+      }
+      catch (err){
+        throw err;
+      }
+    }
+
     static associate(models) {
       GroupImage.belongsTo(models.Group, {
         foreignKey: 'groupId'
