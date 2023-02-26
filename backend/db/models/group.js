@@ -82,6 +82,17 @@ module.exports = (sequelize, DataTypes) => {
       }
     };
 
+    //deletes a group
+    static async deleteGroup(groupId) {
+      try {
+        return await Group.destroy({where: {
+          id: groupId
+        }});
+      }
+      catch (err) {
+        throw err;
+      }
+    }
 
     static associate(models) {
       Group.belongsTo(models.User, {

@@ -252,5 +252,31 @@ router.put('/:groupId', validateGroup, requireAuthentication, exists, addEditRol
         }
     });
 
+//add roles for deleting
+const addDeleteRoles = async (req, res, next) => {
+    req.roles = {
+        organizer: true,
+        groupId: req.params.groupId
+    }
+
+    next();
+};
+
+//delete a group
+router.delete('/:groupId', requireAuthentication, exists, addDeleteRoles, requireAuthorization,
+    async (req, res, next) => {
+        const {groupId} = req.params;
+
+        try {
+            const del = await Group.deleteGroup(groupId);
+
+            if (del) {
+                return res.json({message: 'Successfully deleted', statusCode: 200});
+            }
+        }
+        catch(err) {
+            next(err);
+        }
+    });
 
 module.exports = router;
