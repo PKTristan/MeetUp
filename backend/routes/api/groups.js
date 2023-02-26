@@ -97,7 +97,14 @@ router.get('/:groupId', async (req, res, next) => {
         return res.json(group);
     }
     catch (error) {
-        next(error);
+        if (error.message === `Group not found.`)
+        {
+            const err = new Error(`Group with id ${groupId} not found.`);
+            err.status = 404;
+            err.title = error.message;
+            err.errors = ['The provided group id doe snot exist.'];
+            return next(err);
+        }
     }
 });
 

@@ -52,7 +52,7 @@ module.exports = (sequelize, DataTypes) => {
         });
 
         if(!group) {
-          throw new Error(`Group with id ${id} not found.`);
+          throw new Error(`Group not found.`);
         }
 
         // console.log(group)
