@@ -6,6 +6,7 @@ const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 const { Group, User} = require('../../db/models');
 const { Sequelize, Op } = require('sequelize');
+const groupImagesRouter = require('./group-images.js');
 
 const router = express.Router();
 
@@ -107,6 +108,12 @@ router.get('/:groupId', async (req, res, next) => {
         }
     }
 });
+
+//add image to group based on group id
+router.use('/:groupId/images', groupImagesRouter);
+
+
+///////////////////////////////////
 
 //validateGroup
 const validateGroup = [
