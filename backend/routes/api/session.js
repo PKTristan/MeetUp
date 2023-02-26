@@ -1,6 +1,6 @@
 // backend/routes/api/session.js
 const express = require ('express');
-const { setTokenCookie, restoreUser } = require('../../utils/auth');
+const { setTokenCookie, restoreUser, requireAuthentication } = require('../../utils/auth');
 const { User } = require('../../db/models');
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
@@ -52,7 +52,7 @@ router.delete('/', (_req, res) => {
 });
 
 //restore session user
-router.get('/', (req, res) => {
+router.get('/', requireAuthentication, (req, res) => {
     const { user } = req;
 
     //return current user

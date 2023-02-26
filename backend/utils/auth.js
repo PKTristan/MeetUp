@@ -65,13 +65,18 @@ const requireAuthentication = async function (req, _res, next, ) {
     err.errors = ['Unauthorized'];
     err.status = 401;
 
+    console.log(token);
+
     if (!token) {
         return next(err);
     }
 
     try {
         const decodedToken = jwt.verify(token, secret);
-        const user = await User.scope('currentUser').findByPk(decodedToken.id);
+        const {data: {id}} = decodedToken;
+        const tokenId = (id ? id : decodedToken.id);
+        //console.log(tokenId)
+        const user = await User.scope('currentUser').findByPk(tokenId);
 
         if (!user) {
             return next(err);

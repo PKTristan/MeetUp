@@ -77,9 +77,24 @@ router.get('/current', requireAuthentication, async(req, res, next) => {
             }
         });
 
-        if (groups)
+        //if (groups)
 
         return res.json({ Groups: groups });
+    }
+    catch (error) {
+        next(error);
+    }
+});
+
+//get group details by id
+router.get('/:groupId', async (req, res, next) => {
+    const {groupId} = req.params;
+
+    try{
+        const group = await Group.getById(groupId);
+
+        // console.log(group)
+        return res.json(group);
     }
     catch (error) {
         next(error);

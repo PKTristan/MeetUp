@@ -4,20 +4,69 @@ const {
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class Group extends Model {
+    //adds a group to the table
     static async addGroup(groupObj) {
       try {
         const group = await Group.create(groupObj);
         return group;
       }
-      catch(e) {
+      catch (e) {
         throw e;
       }
     }
 
+    //gets the details of a user by id
+    static async getById(id) {
+      try {
+        // console.log(`SQL query: ${Group.findByPk.toString()}`);
+
+        const group = await Group.findByPk(id, {
+          attributes: {
+            include: [
+              [
+                sequelize.literal(`(SELECT COUNT(*) FROM "Memberships" WHERE "Memberships"."groupId" = ${id} AND "Memberships"."status" = 'approved')`),
+                'numMembers'
+              ]
+            ]
+          },
+          include: [
+            {
+              model: sequelize.models.GroupImage,
+              attributes: ['id', 'url', 'preview'],
+              where: { groupId: id },
+              required: false
+            },
+            {
+              model: sequelize.models.User,
+              as: 'Organizer',
+              attributes: ['id', 'firstName', 'lastName']
+            },
+            {
+              model: sequelize.models.Venue,
+              attributes: ['id', 'groupId', 'address', 'city', ['latitude', 'lat'], ['longitude', 'lng']],
+              where: {groupId: id},
+              required: false
+            }
+          ]
+
+        });
+
+        if(!group) {
+          throw new Error(`Group with id ${id} not found.`);
+        }
+
+        // console.log(group)
+        return group;
+      }
+      catch (e) {
+        throw e;
+      }
+    };
 
 
     static associate(models) {
       Group.belongsTo(models.User, {
+        as: 'Organizer',
         foreignKey: 'organizerId'
       });
 
@@ -26,6 +75,7 @@ module.exports = (sequelize, DataTypes) => {
       });
 
       Group.belongsToMany(models.User, {
+        as: 'member',
         through: models.Membership,
         foreignKey: 'groupId'
       });
