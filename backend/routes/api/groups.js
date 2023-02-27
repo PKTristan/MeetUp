@@ -6,6 +6,7 @@ const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 const { Group, User, GroupImage } = require('../../db/models');
 const { Sequelize, Op } = require('sequelize');
+const venuesRouter = require('./venues.js');
 
 const router = express.Router();
 
@@ -151,6 +152,23 @@ router.post('/:groupId/images', requireAuthentication, exists, addImageRoles, re
         next(err);
     }
 });
+
+//add venue roles
+//add roles for editing
+const addVenueRoles = async (req, res, next) => {
+    req.roles = {
+        organizer: true,
+        member: {
+            status: 'co-host'
+        },
+        groupId: req.params.groupId
+    }
+
+    next();
+};
+
+//get venues for group by groupID router
+router.use('/:groupId/venues', requireAuthentication, exists, addVenueRoles, requireAuthorization, venuesRouter);
 
 
 ///////////////////////////////////

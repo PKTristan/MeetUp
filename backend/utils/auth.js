@@ -3,7 +3,7 @@
 const jwt = require('jsonwebtoken');
 
 const { jwtConfig } = require('../config');
-const { User, Group } = require('../db/models');
+const { User, Group, Membership } = require('../db/models');
 
 const { secret, expiresIn } = jwtConfig;
 
@@ -104,9 +104,8 @@ const requireAuthorization = async function (req, res, next) {
 
         if (!isOrganizer) { hasRequiredRoles = false };
     }
-
-    if (member) {
-        const status = await Membership.findOne({
+    else if (member) {
+        const membership = await Membership.findOne({
             where: {
                 userId: user.id,
                 groupId: groupId
@@ -114,12 +113,11 @@ const requireAuthorization = async function (req, res, next) {
             attributes: ['status']
         });
 
-        if (!status || (status.status !== member.status)) {
+        if (!membership || (membership.status !== member.status)) {
             hasRequiredRoles = false;
         }
     }
-
-    if (attendee) {
+    else if (attendee) {
         const status = await Attendence.findOne({
             where: {
                 userId: user.id,
@@ -132,7 +130,7 @@ const requireAuthorization = async function (req, res, next) {
             hasRequiredRoles = false;
         }
     }
-    console.log(hasRequiredRoles);
+
     // If the user has the required roles and permissions, allow them to access the endpoint
     if (hasRequiredRoles) {
         return next();

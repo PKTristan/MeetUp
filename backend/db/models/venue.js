@@ -9,6 +9,39 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
+
+    //get a list of venues with a list of constraints
+    static async getVenuesBy(attrObj) {
+      try {
+        const venues = await Venue.findAll({
+          attributes: [
+            'id',
+            'groupId',
+            'address',
+            'city',
+            'state',
+            ['latitude', 'lat'],
+            ['longitude', 'lng']
+          ],
+          where: attrObj
+        });
+
+        if (!venues) {
+          throw new Error('No venues found.');
+        }
+
+        return venues;
+      }
+      catch (err) {
+        if (err.message === 'No venues found.') {
+          err.status = 404;
+        }
+
+        throw err;
+      }
+    }
+
+
     static associate(models) {
       Venue.hasMany(models.Event, {
         foreignKey: 'venueId'
