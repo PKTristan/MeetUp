@@ -33,7 +33,7 @@ module.exports = {
       },
       venueId: {
         type: Sequelize.INTEGER,
-        allowNull: false,
+        allowNull: true,
         references: {
           model: 'Venues',
           key: 'id',
@@ -72,7 +72,7 @@ module.exports = {
       },
       numAttending: {
         type: Sequelize.INTEGER,
-        alowNull: false
+        alowNull: true
       },
       createdAt: {
         allowNull: false,

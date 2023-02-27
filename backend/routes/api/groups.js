@@ -210,7 +210,7 @@ const validateType = (typeLow) => {
         return 'In Person';
     }
 
-    throw new Error('not a valid type of event');
+    throw new Error('Type must be Online or In person');
 };
 
 //create a group

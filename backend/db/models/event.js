@@ -60,7 +60,36 @@ module.exports = (sequelize, DataTypes) => {
       catch (err) {
         throw err;
       }
-    }
+    };
+
+    //create a new event
+    static async createEvent(eventObj) {
+      try {
+        const created = await Event.create(eventObj);
+        const {id} = created;
+        console.log(id)
+
+        const event = await Event.findByPk(id, {
+          attributes: [
+            'id',
+            'groupId',
+            'venueId',
+            'name',
+            'type',
+            'capacity',
+            'price',
+            'description',
+            'startDate',
+            'endDate'
+          ]
+        });
+
+        return event;
+      }
+      catch(err) {
+        throw err;
+      }
+    };
 
 
     static associate(models) {
@@ -89,7 +118,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     venueId: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: true
     },
     name: {
       type: DataTypes.STRING,
@@ -122,7 +151,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     numAttending: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: true
     }
   }, {
     sequelize,
