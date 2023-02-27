@@ -11,8 +11,9 @@ const router = express.Router({ mergeParams: true });
 
 //check if events exists
 const exists = async (req, res, next) => {
+    const id = req.params.eventId;
     try {
-        const event = await Event.findByPk(req.params.eventId);
+        const event = await Event.findByPk(id);
 
         if (!event) {
             const err = new Error("Event couldn't be found");
@@ -22,12 +23,15 @@ const exists = async (req, res, next) => {
             throw err;
         }
 
-        req.body.groupId = event.groupId;
+
+        req.roles = { groupId: event.groupId};
+
+        console.log(req.roles)
 
         next();
     }
     catch (err) {
-        throw err;
+        next(err);
     }
 }
 
@@ -65,16 +69,13 @@ router.get('/:eventId', exists, async (req, res, next) => {
 
 //add create event roles
 const addCreateRoles = async (req, res, next) => {
-    req.roles = {
-        organizer: true,
-        member: {
-            status: 'co-host'
-        },
-        groupId: req.body.groupId
-    }
+    if(!req.roles) {req.roles = {groupId: req.params.groupId}};
+    req.roles.organizer = true;
+    req.roles.member = { status: 'co-host' };
+
 
     next();
-}
+};
 
 //validate in person or online
 const validateType = (value, { req }) => {
@@ -170,22 +171,6 @@ const validateEvent = [
     handleValidationErrors
 ];
 
-//route to create event
-router.post('/', requireAuthentication, validateEvent, addCreateRoles, requireAuthorization,
-    async (req, res, next) => {
-        const { venueId, name, type, capacity, price, description, startDate, endDate } = req.body;
-        const { groupId } = req.params;
-
-        try {
-            const event = await Event.createEvent({ groupId, venueId, name, type, capacity, price, description, startDate, endDate });
-
-            return res.json(event);
-        }
-        catch (e) {
-            next(e);
-        }
-    });
-
 //add image to event roles
 const addImageRoles = async (req, res, next) => {
     req.roles = {
@@ -209,18 +194,35 @@ const validateImage = [
     handleValidationErrors
 ];
 
-//add an image to an event based on an eventId
-router.post('/:eventId/images', requireAuthentication, exists, validateImage, addImageRoles, requireAuthorization,
-    async(req, res, next) => {
-        const {url, preview} = req.body;
-        const {eventId} = req.params;
+
+//route to create event
+router.post('/', requireAuthentication, validateEvent, addCreateRoles, requireAuthorization,
+    async (req, res, next) => {
+        const { venueId, name, type, capacity, price, description, startDate, endDate } = req.body;
+        const { groupId } = req.params;
 
         try {
-            const image = await EventImage.addImage({eventId, url, preview});
+            const event = await Event.createEvent({ groupId, venueId, name, type, capacity, price, description, startDate, endDate });
+
+            return res.json(event);
+        }
+        catch (e) {
+            next(e);
+        }
+    });
+
+//add an image to an event based on an eventId
+router.post('/:eventId/images', requireAuthentication, exists, validateImage, addImageRoles, requireAuthorization,
+    async (req, res, next) => {
+        const { url, preview } = req.body;
+        const { eventId } = req.params;
+
+        try {
+            const image = await EventImage.addImage({ eventId, url, preview });
 
             return res.json(image);
         }
-        catch(e) {
+        catch (e) {
             next(e);
         }
     });
@@ -229,8 +231,8 @@ router.post('/:eventId/images', requireAuthentication, exists, validateImage, ad
 //edit an event specified by its id
 router.put('/:eventId', requireAuthentication, exists, validateEvent, addCreateRoles, requireAuthorization,
     async (req, res, next) => {
-        const {eventId} = req.params;
-        const {groupId, venueId, name, type, capacity, price, description, startDate, endDate} = req.body;
+        const { eventId } = req.params;
+        const { groupId, venueId, name, type, capacity, price, description, startDate, endDate } = req.body;
 
         try {
             const event = await Event.editEvent({ groupId, venueId, name, type, capacity, price, description, startDate, endDate },
@@ -238,8 +240,26 @@ router.put('/:eventId', requireAuthentication, exists, validateEvent, addCreateR
 
             return res.json(event);
         }
-        catch(err) {
+        catch (err) {
             next(err);
         }
     });
+
+//delete an event by its id
+router.delete('/:eventId', requireAuthentication, exists, addCreateRoles, requireAuthorization,
+    async (req, res, next) => {
+        const { eventId } = req.params;
+
+        try {
+            const del = await Event.deleteEvent(eventId);
+
+            if (del) {
+                return res.json({ message: 'Successfully deleted', statusCode: 200 });
+            }
+        }
+        catch (err) {
+            next(err);
+        }
+    });
+
 module.exports = router;

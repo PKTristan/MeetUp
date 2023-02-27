@@ -126,6 +126,18 @@ module.exports = (sequelize, DataTypes) => {
       }
     };
 
+    //delete an event
+    static async deleteEvent(eventId) {
+      try {
+        return await Event.destroy({
+          where: {id: eventId}
+        });
+      }
+      catch(err) {
+        throw(err);
+      }
+    }
+
     static associate(models) {
       Event.belongsToMany(models.User, {
         through: models.Attendance,
