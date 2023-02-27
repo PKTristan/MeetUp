@@ -17,7 +17,7 @@ const exists = async (req, res, next) => {
         const group = await Group.findByPk(req.params.groupId);
 
         if (!group) {
-            const err = new Error('Group does not exist.');
+            const err = new Error("Group couldn't be found");
             err.error = "Group couldn't be found";
             err.status = 404;
 
@@ -172,7 +172,7 @@ const addVenueRoles = async (req, res, next) => {
 router.use('/:groupId/venues', requireAuthentication, exists, addVenueRoles, requireAuthorization, venuesRouter);
 
 //route to events
-router.use('/:groupId/events', eventsRouter);
+router.use('/:groupId/events', exists, eventsRouter);
 
 ///////////////////////////////////
 

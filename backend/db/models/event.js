@@ -2,6 +2,8 @@
 const {
   Model
 } = require('sequelize');
+
+
 module.exports = (sequelize, DataTypes) => {
   class Event extends Model {
     /**
@@ -11,11 +13,44 @@ module.exports = (sequelize, DataTypes) => {
      */
 
     //get events by
-    static async getEventsBy (eventObj) {
+    static async getEventsBy (whereObj) {
       try {
         const events = await Event.findAll({
-          where: eventObj
+          attributes: {
+            include: [
+              'id',
+              'groupId',
+              'venueId',
+              'name',
+              'type',
+              'startDate',
+              'endDate',
+              [
+                sequelize.literal('(SELECT COUNT(*) FROM Attendances WHERE Attendances.eventId = Event.id AND Attendances.status = "Going")'),
+                'numAttending'
+              ],
+              [
+                sequelize.literal(
+                  `(SELECT url FROM EventImages WHERE EventImages.eventId = Event.id AND EventImages.preview = true)`
+                ),
+                'previewImage'
+              ]
+            ],
+            exclude: ['createdAt', 'updatedAt']
+          },
+          include: [
+            {
+              model: sequelize.models.Group,
+              attributes: ['id', 'name', 'city', 'state']
+            },
+            {
+              model: sequelize.models.Venue,
+              attributes: ['id', 'city', 'state']
+            }
+          ],
+          where: whereObj
         });
+
 
         return events;
       }

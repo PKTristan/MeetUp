@@ -9,6 +9,26 @@ const { Sequelize } = require('sequelize');
 
 const router = express.Router({mergeParams: true});
 
+//check if events exists
+const exists = async (req, res, next) => {
+    try {
+        const event = await Event.findByPk(req.params.eventId);
+
+        if (!event) {
+            const err = new Error("Event couldn't be found");
+            err.error = "Event couldn't be found";
+            err.status = 404;
+
+            throw err;
+        }
+
+        next();
+    }
+    catch (err) {
+        throw err;
+    }
+}
+
 //get all events
 router.get('/', async(req, res, next) => {
     const {groupId} = req.params;
@@ -16,43 +36,23 @@ router.get('/', async(req, res, next) => {
     console.log(whereObj);
 
     try {
-        const events = await Event.findAll({
-            attributes: {
-                include: [
-                    'id',
-                    'groupId',
-                    'venueId',
-                    'name',
-                    'type',
-                    'startDate',
-                    'endDate',
-                    [
-                        Sequelize.literal('(SELECT COUNT(*) FROM Attendances WHERE Attendances.eventId = Event.id AND Attendances.status = "Going")'),
-                        'numAttending'
-                    ],
-                    [
-                        Sequelize.literal(
-                            `(SELECT url FROM EventImages WHERE EventImages.eventId = Event.id AND EventImages.preview = true)`
-                        ),
-                        'previewImage'
-                    ]
-                ],
-                exclude: ['createdAt', 'updatedAt']
-            },
-            include: [
-                {
-                    model: Group,
-                    attributes: ['id', 'name', 'city', 'state']
-                },
-                {
-                    model: Venue,
-                    attributes: ['id', 'city', 'state']
-                }
-            ],
-            where: whereObj
-        });
+        const events = await Event.getEventsBy(whereObj);
 
         return res.json(events);
+    }
+    catch(err) {
+        next(err);
+    }
+});
+
+//get event by id
+router.get('/:eventId', exists, async (req, res, next) => {
+    const id = req.params.eventId;
+
+    try {
+        const event = await Event.getEventsBy({id});
+
+        return res.json(event);
     }
     catch(err) {
         next(err);
