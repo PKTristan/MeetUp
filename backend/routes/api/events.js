@@ -22,6 +22,8 @@ const exists = async (req, res, next) => {
             throw err;
         }
 
+        req.body.groupId = event.groupId;
+
         next();
     }
     catch (err) {
@@ -68,7 +70,7 @@ const addCreateRoles = async (req, res, next) => {
         member: {
             status: 'co-host'
         },
-        groupId: req.params.groupId
+        groupId: req.body.groupId
     }
 
     next();
@@ -223,4 +225,21 @@ router.post('/:eventId/images', requireAuthentication, exists, validateImage, ad
         }
     });
 
+
+//edit an event specified by its id
+router.put('/:eventId', requireAuthentication, exists, validateEvent, addCreateRoles, requireAuthorization,
+    async (req, res, next) => {
+        const {eventId} = req.params;
+        const {groupId, venueId, name, type, capacity, price, description, startDate, endDate} = req.body;
+
+        try {
+            const event = await Event.editEvent({ groupId, venueId, name, type, capacity, price, description, startDate, endDate },
+                eventId);
+
+            return res.json(event);
+        }
+        catch(err) {
+            next(err);
+        }
+    });
 module.exports = router;

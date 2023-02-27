@@ -91,6 +91,40 @@ module.exports = (sequelize, DataTypes) => {
       }
     };
 
+    //edit an event
+    static async editEvent(eventObj, eventId) {
+      try {
+        const updated = await Event.update(eventObj, {
+          where: {
+            id: eventId
+          }
+        });
+
+        if (!updated[0]) {
+          throw new Error('update failed');
+        }
+
+        const venue = await Event.findByPk(eventId, {
+          attributes: [
+            'id',
+            'groupId',
+            'venueId',
+            'name',
+            'type',
+            'capacity',
+            'price',
+            'description',
+            'startDate',
+            'endDate'
+          ]
+        });
+
+        return venue;
+      }
+      catch(err) {
+        throw err;
+      }
+    };
 
     static associate(models) {
       Event.belongsToMany(models.User, {
