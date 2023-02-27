@@ -95,24 +95,25 @@ const requireAuthorization = async function (req, res, next) {
 
     const user = req.user; // get the authenticated user from the reques
     let hasRequiredRoles = true;
+    let isOrganizer = false;
+    let isMember = false;
+    let isAttendee = false;
     const { organizer, member, attendee, groupId, eventId } = req.roles;
 
 
     if (organizer) {
         const group = await Group.findByPk(groupId);
         const {organizerId} = group;
-        const isOrganizer = (organizerId === user.id);
+        isOrganizer = (organizerId === user.id);
 
-        if (!isOrganizer) {
-            hasRequiredRoles = false;
-            req.roles.isOrganizer = false;
-        };
+        // if (!isOrganizer) {
+        //     hasRequiredRoles = false;
+        // };
 
-        req.roles.isOrganizer = true;
     }
 
-    if (member) {
-        hasRequiredRoles = true;
+    if (member && !isOrganizer) {
+        // hasRequiredRoles = true;
         const membership = await Membership.findOne({
             where: {
                 userId: user.id,
@@ -121,13 +122,15 @@ const requireAuthorization = async function (req, res, next) {
             attributes: ['status']
         });
 
-        if (!membership || (membership.status !== member.status)) {
-            hasRequiredRoles = false;
-        }
+        isMember = (membership.status === member.status);
+
+        // if (!membership || !isMember) {
+        //     hasRequiredRoles = false;
+        // }
     }
 
-    if (attendee) {
-        hasRequiredRoles = true;
+    if (attendee && !isOrganizer && !isMember) {
+        // hasRequiredRoles = true;
         const attendance = await Attendance.findOne({
             where: {
                 userId: user.id,
@@ -148,10 +151,12 @@ const requireAuthorization = async function (req, res, next) {
             return status;
         };
 
-        if (isUnauth()) {
-            hasRequiredRoles = false;
+        if (!isUnauth()) {
+            isAttendee = true;
         }
     }
+
+    hasRequiredRoles = isOrganizer || isMember || isAttendee;
 
     // If the user has the required roles and permissions, allow them to access the endpoint
     if (hasRequiredRoles) {
