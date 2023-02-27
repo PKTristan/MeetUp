@@ -41,6 +41,21 @@ module.exports = (sequelize, DataTypes) => {
       }
     }
 
+    //add a new venue
+    static async addVenue(venueObj) {
+      try {
+        const created = await Venue.create(venueObj);
+        const {id} = created;
+
+        const venue = await Venue.getVenuesBy({id});
+
+        return venue;
+      }
+      catch(e) {
+        throw(e);
+      }
+    }
+
 
     static associate(models) {
       Venue.hasMany(models.Event, {
