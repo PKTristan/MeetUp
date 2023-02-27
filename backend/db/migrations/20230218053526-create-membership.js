@@ -8,50 +8,38 @@ if (process.env.NODE_ENV === 'production') {
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    options.order = 2;
-    await queryInterface.createTable('Groups', {
+    options.order = 3;
+    await queryInterface.createTable('Memberships', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      organizerId: {
+      userId: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
           model: 'Users',
           key: 'id',
-          name: 'Groups_organizerId_fkey',
+          name: 'Memberships_userId_fkey',
         },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       },
-      name: {
-        type: Sequelize.STRING(60),
-        allowNull: false
-      },
-      about: {
-        type: Sequelize.TEXT,
+      groupId: {
+        type: Sequelize.INTEGER,
         allowNull: false,
-        validate: {
-          len: [60, Infinity]
-        }
+        references: {
+          model: 'Groups',
+          key: 'id',
+          name: 'Memberships_groupId_fkey',
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       },
-      type: {
-        type: Sequelize.ENUM('Online', 'In Person'),
-        allowNull: false
-      },
-      private: {
-        type: Sequelize.BOOLEAN,
-        allowNull: false
-      },
-      city: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
-      state: {
-        type: Sequelize.STRING,
+      status: {
+        type: Sequelize.ENUM('pending', 'approved', 'denied', 'co-host'),
         allowNull: false
       },
       createdAt: {
@@ -66,10 +54,10 @@ module.exports = {
       }
     }, options);
   },
-
   async down(queryInterface, Sequelize) {
-    options.order = 7;
-    // await queryInterface.removeConstraint('Groups', 'Groups_organizerId_fkey', options);
-    await queryInterface.dropTable('Groups', options);
+    options.order = 6;
+    // await queryInterface.removeConstraint('Memberships', 'Memberships_userId_fkey', options);
+    // await queryInterface.removeConstraint('Memberships', 'Memberships_groupId_fkey', options);
+    await queryInterface.dropTable('Memberships', options);
   }
 };

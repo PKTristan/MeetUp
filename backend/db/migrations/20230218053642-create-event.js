@@ -1,57 +1,73 @@
 'use strict';
+
+const { QueryError } = require('sequelize');
+
 /** @type {import('sequelize-cli').Migration} */
 
 let options = {};
 if (process.env.NODE_ENV === 'production') {
   options.schema = process.env.SCHEMA;    // define schema in options object
-};
+}
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    options.order = 2;
-    await queryInterface.createTable('Groups', {
+    options.order = 5;
+    await queryInterface.createTable('Events', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      organizerId: {
+      groupId: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'Users',
+          model: 'Groups',
           key: 'id',
-          name: 'Groups_organizerId_fkey',
+          name: 'Events_groupId_fkey',
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
+
+      },
+      venueId: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+        references: {
+          model: 'Venues',
+          key: 'id',
+          name: 'Events_venueId_fkey',
         },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       },
       name: {
-        type: Sequelize.STRING(60),
-        allowNull: false
-      },
-      about: {
-        type: Sequelize.TEXT,
-        allowNull: false,
-        validate: {
-          len: [60, Infinity]
-        }
+        type: Sequelize.STRING,
+        allowNUll:false
       },
       type: {
         type: Sequelize.ENUM('Online', 'In Person'),
         allowNull: false
       },
-      private: {
-        type: Sequelize.BOOLEAN,
+      capacity: {
+        type: Sequelize.INTEGER,
         allowNull: false
       },
-      city: {
-        type: Sequelize.STRING,
+      price: {
+        type: Sequelize.DECIMAL(9, 2),
         allowNull: false
       },
-      state: {
-        type: Sequelize.STRING,
+      description: {
+        type: Sequelize.TEXT,
+        allowNull: false
+      },
+      startDate: {
+        type: Sequelize.DATE,
+        allowNull: false
+      },
+      endDate: {
+        type: Sequelize.DATE,
         allowNull: false
       },
       createdAt: {
@@ -66,10 +82,10 @@ module.exports = {
       }
     }, options);
   },
-
   async down(queryInterface, Sequelize) {
-    options.order = 7;
-    // await queryInterface.removeConstraint('Groups', 'Groups_organizerId_fkey', options);
-    await queryInterface.dropTable('Groups', options);
+    options.order = 4;
+    // await queryInterface.removeConstraint('Events', 'Events_groupId_fkey', options);
+    // await queryInterface.removeConstraint('Events', 'Events_venueId_fkey', options);
+    await queryInterface.dropTable('Events', options);
   }
 };

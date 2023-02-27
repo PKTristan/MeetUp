@@ -70,6 +70,16 @@ module.exports = (sequelize, DataTypes) => {
       User.hasMany(models.Group, {
         foreignKey: 'organizerId'
       });
+
+      User.belongsToMany(models.Event, {
+        through: models.Attendance,
+        foreignKey: 'userId'
+      });
+
+      User.belongsToMany(models.Group, {
+        through: models.Membership,
+        foreignKey: 'userId'
+      });
     }
   };
 
@@ -77,6 +87,7 @@ module.exports = (sequelize, DataTypes) => {
     username: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: true,
       validate: {
         len: [4, 30],
         isNotEmail(value) {

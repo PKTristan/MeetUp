@@ -8,34 +8,31 @@ if (process.env.NODE_ENV === 'production') {
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    options.order = 1;
-    await queryInterface.createTable('Users', {
+    options.order = 7;
+    await queryInterface.createTable('GroupImages', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      username: {
-        type: Sequelize.STRING(30),
+      groupId: {
+        type: Sequelize.INTEGER,
         allowNull: false,
-        unique: true
+        references: {
+          model: 'Groups',
+          key: 'id',
+          name: 'GroupImages_groupId_fkey',
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       },
-      firstName: {
+      preview: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false
+      },
+      url: {
         type: Sequelize.STRING,
-        allowNull: true
-      },
-      lastName: {
-        type: Sequelize.STRING,
-        allowNull: true
-      },
-      email: {
-        type: Sequelize.STRING(256),
-        allowNull: false,
-        unique: true
-      },
-      hashedPassword: {
-        type: Sequelize.STRING.BINARY,
         allowNull: false
       },
       createdAt: {
@@ -51,7 +48,8 @@ module.exports = {
     }, options);
   },
   async down(queryInterface, Sequelize) {
-    options.order = 8;
-    await queryInterface.dropTable('Users', options);
+    options.order = 2;
+    // await queryInterface.removeConstraint('GroupImages', 'GroupImages_groupId_fkey', options);
+    await queryInterface.dropTable('GroupImages', options);
   }
 };

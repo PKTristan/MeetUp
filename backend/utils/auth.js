@@ -1,7 +1,9 @@
+
 // backend/utils/auth.js
 const jwt = require('jsonwebtoken');
+
 const { jwtConfig } = require('../config');
-const { User } = require('../db/models');
+const { User, Group, Membership, Attendance } = require('../db/models');
 
 const { secret, expiresIn } = jwtConfig;
 
@@ -54,7 +56,7 @@ const restoreUser = (req, res, next) => {
 
 
 // if not current user, then return error
-const requireAuth = async function (req, _res, next) {
+const requireAuthentication = async function (req, _res, next,) {
     const { token } = req.cookies;
 
     //create err for unauthorized
@@ -63,13 +65,18 @@ const requireAuth = async function (req, _res, next) {
     err.errors = ['Unauthorized'];
     err.status = 401;
 
+    console.log(token);
+
     if (!token) {
         return next(err);
     }
 
     try {
         const decodedToken = jwt.verify(token, secret);
-        const user = await User.findByPk(decodedToken.id);
+        const { data: { id } } = decodedToken;
+        const tokenId = (id ? id : decodedToken.id);
+        //console.log(tokenId)
+        const user = await User.scope('currentUser').findByPk(tokenId);
 
         if (!user) {
             return next(err);
@@ -77,18 +84,92 @@ const requireAuth = async function (req, _res, next) {
 
         req.user = user;        //set current auth user
         return next();
-    } catch(error) {
+    } catch (error) {
         error.status = 401;
         return next(error);
     }
-
-    /* if (req.user) return next();
-
-    const err = new Error('Unauthorized');
-    err.title = 'Unauthorized';
-    err.errors = ['Unauthorized'];
-    err.status = 401;
-    return next(err); */
 };
 
-module.exports = { setTokenCookie, restoreUser, requireAuth };
+//permissions and roles
+const requireAuthorization = async function (req, res, next) {
+
+    const user = req.user; // get the authenticated user from the reques
+    let hasRequiredRoles = true;
+    let isOrganizer = false;
+    let isMember = false;
+    let isAttendee = false;
+    const { organizer, member, attendee, groupId, eventId } = req.roles;
+
+
+    if (organizer) {
+        const group = await Group.findByPk(groupId);
+        const {organizerId} = group;
+        isOrganizer = (organizerId === user.id);
+
+        // if (!isOrganizer) {
+        //     hasRequiredRoles = false;
+        // };
+
+    }
+
+    if (member && !isOrganizer) {
+        // hasRequiredRoles = true;
+        const membership = await Membership.findOne({
+            where: {
+                userId: user.id,
+                groupId: groupId
+            },
+            attributes: ['status']
+        });
+
+        isMember = (membership.status === member.status);
+
+        // if (!membership || !isMember) {
+        //     hasRequiredRoles = false;
+        // }
+    }
+
+    if (attendee && !isOrganizer && !isMember) {
+        // hasRequiredRoles = true;
+        const attendance = await Attendance.findOne({
+            where: {
+                userId: user.id,
+                eventId: eventId
+            },
+            attributes: ['status']
+        });
+
+        const isUnauth = () => {
+            let status = true;
+
+            for (stat in attendee) {
+                if (!attendance || attendance.status === stat) {
+                    status = false;
+                }
+            }
+
+            return status;
+        };
+
+        if (!isUnauth()) {
+            isAttendee = true;
+        }
+    }
+
+    hasRequiredRoles = isOrganizer || isMember || isAttendee;
+
+    // If the user has the required roles and permissions, allow them to access the endpoint
+    if (hasRequiredRoles) {
+        return next();
+    }
+
+    // If the user does not have the required roles and permissions, respond with a 403 error
+    // return res.status(403).json({ error: 'Unauthorized' })
+    const err = new Error('Unauthorized');
+    err.status = 403;
+    err.message = 'Unauthorized';
+    throw err;
+};
+
+
+module.exports = { setTokenCookie, restoreUser, requireAuthentication, requireAuthorization };

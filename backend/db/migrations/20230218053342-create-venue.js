@@ -8,35 +8,44 @@ if (process.env.NODE_ENV === 'production') {
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    options.order = 1;
-    await queryInterface.createTable('Users', {
+    options.order = 4;
+    await queryInterface.createTable('Venues', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      username: {
-        type: Sequelize.STRING(30),
-        allowNull: false,
-        unique: true
-      },
-      firstName: {
+      address: {
         type: Sequelize.STRING,
-        allowNull: true
-      },
-      lastName: {
-        type: Sequelize.STRING,
-        allowNull: true
-      },
-      email: {
-        type: Sequelize.STRING(256),
-        allowNull: false,
-        unique: true
-      },
-      hashedPassword: {
-        type: Sequelize.STRING.BINARY,
         allowNull: false
+      },
+      city: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      state: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      latitude: {
+        type: Sequelize.DECIMAL(9, 6),
+        allowNull:false
+      },
+      longitude: {
+        type: Sequelize.DECIMAL(9, 6),
+        allowNull: false
+      },
+      groupId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'Groups',
+          key: 'id',
+          name: 'Venues_groupId_fkey',
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       },
       createdAt: {
         allowNull: false,
@@ -51,7 +60,8 @@ module.exports = {
     }, options);
   },
   async down(queryInterface, Sequelize) {
-    options.order = 8;
-    await queryInterface.dropTable('Users', options);
+    options.order = 5;
+    // await queryInterface.removeConstraint('Venues', 'Venues_groupId_fkey', options);
+    await queryInterface.dropTable('Venues', options);
   }
 };

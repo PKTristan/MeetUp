@@ -4,54 +4,42 @@
 let options = {};
 if (process.env.NODE_ENV === 'production') {
   options.schema = process.env.SCHEMA;    // define schema in options object
-};
+}
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    options.order = 2;
-    await queryInterface.createTable('Groups', {
+    options.order = 6;
+    await queryInterface.createTable('Attendances', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      organizerId: {
+      userId: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
           model: 'Users',
           key: 'id',
-          name: 'Groups_organizerId_fkey',
+          name: 'Attendance_userId_fkey',
         },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       },
-      name: {
-        type: Sequelize.STRING(60),
-        allowNull: false
-      },
-      about: {
-        type: Sequelize.TEXT,
+      eventId: {
+        type: Sequelize.INTEGER,
         allowNull: false,
-        validate: {
-          len: [60, Infinity]
-        }
+        references: {
+          model: 'Events',
+          key: 'id',
+          name: 'Attendance_eventId_fkey',
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       },
-      type: {
-        type: Sequelize.ENUM('Online', 'In Person'),
-        allowNull: false
-      },
-      private: {
-        type: Sequelize.BOOLEAN,
-        allowNull: false
-      },
-      city: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
-      state: {
-        type: Sequelize.STRING,
+      status: {
+        type: Sequelize.ENUM('member', 'waitlist', 'pending', 'host', 'co-host'),
         allowNull: false
       },
       createdAt: {
@@ -66,10 +54,10 @@ module.exports = {
       }
     }, options);
   },
-
   async down(queryInterface, Sequelize) {
-    options.order = 7;
-    // await queryInterface.removeConstraint('Groups', 'Groups_organizerId_fkey', options);
-    await queryInterface.dropTable('Groups', options);
+    options.order = 3;
+    // await queryInterface.removeConstraint('Attendances', 'Attendances_userId_fkey', options);
+    // await queryInterface.removeConstraint('Attendances', 'Attendance_eventId_fkey', options);
+    await queryInterface.dropTable('Attendances', options);
   }
 };
