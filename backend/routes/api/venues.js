@@ -9,6 +9,22 @@ const { Sequelize, Op } = require('sequelize');
 
 const router = express.Router();
 
+//check if venue exists
+const exists = async (req, res, next) => {
+    const id = req.params.venueId;
+
+    try {
+        const venue = await Venue.findByPk(id);
+
+        req.roles = {groupId: venue.groupId};
+
+        next();
+    }
+    catch(e) {
+        next(e);
+    }
+};
+
 //get all venues specified by groupId or venueId
 router.get('/', async (req, res, next) => {
     const groupId = req.roles.groupId;
@@ -65,5 +81,29 @@ router.post('/', validateVenue, async (req, res, next) => {
         next(e);
     }
 });
+
+//adding required roles for editing venues
+const addEditRoles = async (req, res, next) => {
+    req.roles.organizer = true;
+    req.roles.member = {status: 'co-host'};
+
+    next();
+};
+
+//edit a venue by its id
+router.put('/:venueId', requireAuthentication, exists, validateVenue, addEditRoles, requireAuthorization,
+    async( req, res, next) => {
+        const {venueId} = req.params;
+        const { address, city, state, lat:latitude, lng:longitude } = req.body;
+
+        try {
+            const venue = await Venue.editVenue({ address, city, state, latitude, longitude }, venueId);
+
+            return res.json(venue);
+        }
+        catch(e) {
+            next(e);
+        }
+    });
 
 module.exports = router;

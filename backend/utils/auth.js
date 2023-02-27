@@ -96,11 +96,12 @@ const requireAuthorization = async function (req, res, next) {
     const user = req.user; // get the authenticated user from the reques
     let hasRequiredRoles = true;
     const { organizer, member, attendee, groupId, eventId } = req.roles;
+   
 
     if (organizer) {
         const group = await Group.findByPk(groupId);
-
-        const isOrganizer = (group.organizerId === user.id);
+        const {organizerId} = group;
+        const isOrganizer = (organizerId === user.id);
 
         if (!isOrganizer) { hasRequiredRoles = false };
     }

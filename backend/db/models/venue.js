@@ -56,6 +56,38 @@ module.exports = (sequelize, DataTypes) => {
       }
     }
 
+    //edit a venue
+    static async editVenue(venueObj, venueId) {
+      try {
+        const updated = await Venue.update(venueObj, {
+          where: {
+            id: venueId
+          }
+        });
+
+        if (!updated[0]) {
+          throw new Error('update failed');
+        }
+
+        const venue = await Venue.findByPk(venueId, {
+          attributes: [
+            'id',
+            'groupId',
+            'address',
+            'city',
+            'state',
+            ['latitude', 'lat'],
+            ['longitude', 'lng']
+          ]
+        });
+
+        return venue;
+      }
+      catch (err) {
+        throw err;
+      }
+    }
+
 
     static associate(models) {
       Venue.hasMany(models.Event, {
