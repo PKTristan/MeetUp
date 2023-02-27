@@ -29,7 +29,7 @@ module.exports = (sequelize, DataTypes) => {
               'startDate',
               'endDate',
               [
-                sequelize.literal('(SELECT COUNT(*) FROM Attendances WHERE Attendances.eventId = Event.id AND Attendances.status = "Going")'),
+                sequelize.literal('(SELECT COUNT(*) FROM Attendances WHERE Attendances.eventId = Event.id AND (Attendances.status = "host" OR Attendances.status = "co-host" OR Attendances.status = "member"))'),
                 'numAttending'
               ],
               [
@@ -148,10 +148,6 @@ module.exports = (sequelize, DataTypes) => {
     endDate: {
       type: DataTypes.STRING,
       allowNull: false
-    },
-    numAttending: {
-      type: DataTypes.INTEGER,
-      allowNull: true
     }
   }, {
     sequelize,

@@ -3,7 +3,7 @@
 const jwt = require('jsonwebtoken');
 
 const { jwtConfig } = require('../config');
-const { User, Group, Membership } = require('../db/models');
+const { User, Group, Membership, Attendance } = require('../db/models');
 
 const { secret, expiresIn } = jwtConfig;
 
@@ -96,7 +96,7 @@ const requireAuthorization = async function (req, res, next) {
     const user = req.user; // get the authenticated user from the reques
     let hasRequiredRoles = true;
     const { organizer, member, attendee, groupId, eventId } = req.roles;
-   
+
 
     if (organizer) {
         const group = await Group.findByPk(groupId);
@@ -119,7 +119,7 @@ const requireAuthorization = async function (req, res, next) {
         }
     }
     else if (attendee) {
-        const status = await Attendence.findOne({
+        const attendance = await Attendance.findOne({
             where: {
                 userId: user.id,
                 eventId: eventId
@@ -127,7 +127,19 @@ const requireAuthorization = async function (req, res, next) {
             attributes: ['status']
         });
 
-        if (!status || (status.status !== attendee.status)) {
+        const isUnauth = () => {
+            let status = true;
+
+            for (stat in attendee) {
+                if (!attendance || attendance.status === stat) {
+                    status = false;
+                }
+            }
+
+            return status;
+        };
+
+        if (isUnauth()) {
             hasRequiredRoles = false;
         }
     }

@@ -16,37 +16,37 @@ module.exports = {
       {
         userId: 1,
         eventId: 1,
-        status: 'Going'
+        status: 'host'
       },
       {
         userId: 2,
         eventId: 1,
-        status: 'Interested'
+        status: 'co-host'
       },
       {
         userId: 3,
         eventId: 1,
-        status: 'Not Going'
+        status: 'member'
       },
       {
         userId: 2,
         eventId: 2,
-        status: 'Going'
+        status: 'host'
       },
       {
         userId: 3,
         eventId: 2,
-        status: 'Going'
+        status: 'waitlist'
       },
       {
         userId: 1,
         eventId: 3,
-        status: 'Going'
+        status: 'member'
       },
       {
         userId: 3,
         eventId: 3,
-        status: 'Not Going'
+        status: 'member'
       }
     ], options);
   },

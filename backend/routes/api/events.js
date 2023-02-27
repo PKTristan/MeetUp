@@ -4,7 +4,7 @@ const express = require('express');
 const { requireAuthentication, requireAuthorization } = require('../../utils/auth');
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
-const { Event, Group, Venue } = require('../../db/models');
+const { Event, EventImage, Venue } = require('../../db/models');
 const { Sequelize } = require('sequelize');
 
 const router = express.Router({ mergeParams: true });
@@ -180,6 +180,45 @@ router.post('/', requireAuthentication, validateEvent, addCreateRoles, requireAu
             return res.json(event);
         }
         catch (e) {
+            next(e);
+        }
+    });
+
+//add image to event roles
+const addImageRoles = async (req, res, next) => {
+    req.roles = {
+        attendee: ['member', 'host', 'co-host'],
+        eventId: req.params.eventId
+    }
+
+    next();
+};
+
+//validate image
+const validateImage = [
+    check('url')
+        .exists({ checkFalsy: true })
+        .isURL()
+        .withMessage("must provide valid url"),
+    check('preview')
+        .exists()
+        .isBoolean()
+        .withMessage("must provide preview option"),
+    handleValidationErrors
+];
+
+//add an image to an event based on an eventId
+router.post('/:eventId/images', requireAuthentication, exists, validateImage, addImageRoles, requireAuthorization,
+    async(req, res, next) => {
+        const {url, preview} = req.body;
+        const {eventId} = req.params;
+
+        try {
+            const image = await EventImage.addImage({eventId, url, preview});
+
+            return res.json(image);
+        }
+        catch(e) {
             next(e);
         }
     });

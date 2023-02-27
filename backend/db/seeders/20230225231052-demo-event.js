@@ -23,8 +23,7 @@ module.exports = {
         capacity: 10,
         price: 18.50,
         startDate: "2022-03-15T18:00:00.000Z",
-        endDate: "2022-03-15T20:00:00.000Z",
-        numAttending: 10
+        endDate: "2022-03-15T20:00:00.000Z"
       },
       {
         groupId: 1,
@@ -35,9 +34,8 @@ module.exports = {
         capacity: 40,
         price: 30.50,
         startDate: "2022-03-16T09:00:00.000Z",
-        endDate: "2022-03-16T10:00:00.000Z",
-        numAttending: 5
-      },
+        endDate: "2022-03-16T10:00:00.000Z"
+        },
       {
         groupId: 2,
         venueId: 3,
@@ -47,8 +45,7 @@ module.exports = {
         capacity: 15,
         price: 18.90,
         startDate: "2022-03-17T16:00:00.000Z",
-        endDate: "2022-03-17T17:00:00.000Z",
-        numAttending: 8
+        endDate: "2022-03-17T17:00:00.000Z"
       }
     ], options);
   },
