@@ -103,9 +103,16 @@ const requireAuthorization = async function (req, res, next) {
         const {organizerId} = group;
         const isOrganizer = (organizerId === user.id);
 
-        if (!isOrganizer) { hasRequiredRoles = false };
+        if (!isOrganizer) {
+            hasRequiredRoles = false;
+            req.roles.isOrganizer = false;
+        };
+
+        req.roles.isOrganizer = true;
     }
-    else if (member) {
+
+    if (member) {
+        hasRequiredRoles = true;
         const membership = await Membership.findOne({
             where: {
                 userId: user.id,
@@ -118,7 +125,9 @@ const requireAuthorization = async function (req, res, next) {
             hasRequiredRoles = false;
         }
     }
-    else if (attendee) {
+
+    if (attendee) {
+        hasRequiredRoles = true;
         const attendance = await Attendance.findOne({
             where: {
                 userId: user.id,

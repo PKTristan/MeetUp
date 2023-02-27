@@ -8,6 +8,7 @@ const { Group, User, GroupImage } = require('../../db/models');
 const { Sequelize, Op } = require('sequelize');
 const venuesRouter = require('./venues.js');
 const eventsRouter = require('./events.js');
+const membersRouter = require('./members.js');
 
 const router = express.Router();
 
@@ -31,6 +32,8 @@ const exists = async (req, res, next) => {
     }
 }
 
+//route to members
+router.use('/:groupId/members', exists, membersRouter);
 
 //get all groups
 router.get('/', async (req, res, next) => {

@@ -10,6 +10,33 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
 
+    //get memebrs
+    static async getMembersBy(whereObj) {
+      try {
+        const members = await Membership.findAll({
+          where: whereObj,
+          include: {
+            model: sequelize.models.User,
+            attributes:['id', 'firstName', 'lastName'],
+          }
+        });
+
+        const formatMembers = members.map(member => ({
+          id: member.User.id,
+          firstName: member.User.firstName,
+          lastName: member.User.lastName,
+          Membership: {
+            status: member.status
+          }
+        }));
+
+        return {Members: formatMembers};
+      }
+      catch (e) {
+        throw e;
+      }
+    }
+
     static associate(models) {
       Membership.belongsTo(models.User, {
         foreignKey: 'userId'

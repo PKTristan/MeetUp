@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
       }
     }
 
-    //gets the details of a user by id
+    //gets the details of a group by id
     static async getById(id) {
       try {
         // console.log(`SQL query: ${Group.findByPk.toString()}`);
