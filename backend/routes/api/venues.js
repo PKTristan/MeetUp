@@ -4,8 +4,8 @@ const express = require('express');
 const { requireAuthentication, requireAuthorization } = require('../../utils/auth');
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
-const { Venue, User, GroupImage } = require('../../db/models');
-const { Sequelize, Op } = require('sequelize');
+const { Venue } = require('../../db/models');
+const { Sequelize } = require('sequelize');
 
 const router = express.Router();
 

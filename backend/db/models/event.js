@@ -9,6 +9,22 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
+
+    //get events by
+    static async getEventsBy (eventObj) {
+      try {
+        const events = await Event.findAll({
+          where: eventObj
+        });
+
+        return events;
+      }
+      catch (err) {
+        throw err;
+      }
+    }
+
+
     static associate(models) {
       Event.belongsToMany(models.User, {
         through: models.Attendance,
