@@ -50,6 +50,18 @@ module.exports = {
         type: Sequelize.ENUM('Online', 'In Person'),
         allowNull: false
       },
+      capacity: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+      },
+      price: {
+        type: Sequelize.DECIMAL(9, 2),
+        allowNull: false
+      },
+      description: {
+        type: Sequelize.TEXT,
+        allowNull: false
+      },
       startDate: {
         type: Sequelize.DATE,
         allowNull: false

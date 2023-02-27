@@ -22,7 +22,10 @@ module.exports = (sequelize, DataTypes) => {
               'groupId',
               'venueId',
               'name',
+              'description',
               'type',
+              'capacity',
+              'price',
               'startDate',
               'endDate',
               [
@@ -95,6 +98,18 @@ module.exports = (sequelize, DataTypes) => {
     type: {
       type: DataTypes.ENUM,
       values: ['Online', 'In Person'],
+      allowNull: false
+    },
+    capacity: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    price: {
+      type: DataTypes.DECIMAL(9, 2),
+      allowNull: false
+    },
+    description: {
+      type: DataTypes.TEXT,
       allowNull: false
     },
     startDate: {

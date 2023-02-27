@@ -61,4 +61,19 @@ router.get('/:eventId', exists, async (req, res, next) => {
 
 //////////////////////////////////////////////////////
 
+//add create event roles
+const addCreateRoles = async (req, res, next) => {
+    req.roles = {
+        organizer: true,
+        member: {
+            status: 'co-host'
+        },
+        groupId: req.params.groupId
+    }
+
+    next();
+}
+
+
+
 module.exports = router;
