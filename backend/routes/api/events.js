@@ -7,10 +7,14 @@ const { handleValidationErrors } = require('../../utils/validation');
 const { Event, Group, Venue } = require('../../db/models');
 const { Sequelize } = require('sequelize');
 
-const router = express.Router();
+const router = express.Router({mergeParams: true});
 
 //get all events
 router.get('/', async(req, res, next) => {
+    const {groupId} = req.params;
+    const whereObj = (groupId) ? {groupId} : {};
+    console.log(whereObj);
+
     try {
         const events = await Event.findAll({
             attributes: {
@@ -44,7 +48,8 @@ router.get('/', async(req, res, next) => {
                     model: Venue,
                     attributes: ['id', 'city', 'state']
                 }
-            ]
+            ],
+            where: whereObj
         });
 
         return res.json(events);

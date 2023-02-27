@@ -7,6 +7,7 @@ const { handleValidationErrors } = require('../../utils/validation');
 const { Group, User, GroupImage } = require('../../db/models');
 const { Sequelize, Op } = require('sequelize');
 const venuesRouter = require('./venues.js');
+const eventsRouter = require('./events.js');
 
 const router = express.Router();
 
@@ -170,6 +171,8 @@ const addVenueRoles = async (req, res, next) => {
 //get venues for group by groupID router
 router.use('/:groupId/venues', requireAuthentication, exists, addVenueRoles, requireAuthorization, venuesRouter);
 
+//route to events
+router.use('/:groupId/events', eventsRouter);
 
 ///////////////////////////////////
 
