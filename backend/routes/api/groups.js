@@ -1,6 +1,11 @@
 //backend/routes/api/groups.js
 const express = require('express');
 
+let options = {};
+if (process.env.NODE_ENV === 'production') {
+    options.schema = process.env.SCHEMA; // schema in options
+};
+
 const { requireAuthentication, requireAuthorization } = require('../../utils/auth');
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
@@ -47,14 +52,16 @@ router.get('/', async (req, res, next) => {
                     // count number of users in group
                     [
                         Sequelize.literal(
-                            `(SELECT COUNT(*) FROM "Memberships" WHERE "Memberships"."groupId" = "Group"."id")`
+                            `(SELECT COUNT(*) FROM ${(options.schema) ? `"${options.schema}"."Memberships"` : `"Memberships"`
+                            } WHERE "Memberships"."groupId" = "Group"."id")`
                         ),
                         'numMembers',
                     ],
                     // preview image URL
                     [
                         Sequelize.literal(
-                            `(SELECT "url" FROM "GroupImages" WHERE "GroupImages"."groupId" = "Group"."id" AND "GroupImages"."preview" = true)`
+                            `(SELECT "url" FROM ${(options.schema) ? `"${options.schema}"."GroupImages"` : `"GroupImages"`
+                            } WHERE "GroupImages"."groupId" = "Group"."id" AND "GroupImages"."preview" = true)`
                         ),
                         'previewImage',
                     ]
@@ -80,14 +87,16 @@ router.get('/current', requireAuthentication, async (req, res, next) => {
                     // count number of users in group
                     [
                         Sequelize.literal(
-                            `(SELECT COUNT(*) FROM "Memberships" WHERE "Memberships"."groupId" = "Group"."id")`
+                            `(SELECT COUNT(*) FROM ${(options.schema) ? `"${options.schema}"."Memberships"` : `"Memberships"`
+                            } WHERE "Memberships"."groupId" = "Group"."id")`
                         ),
                         'numMembers',
                     ],
                     // preview image URL
                     [
                         Sequelize.literal(
-                            `(SELECT "url" FROM "GroupImages" WHERE "GroupImages"."groupId" = "Group"."id" AND "GroupImages"."preview" = true)`
+                            `(SELECT "url" FROM ${(options.schema) ? `"${options.schema}"."GroupImages"` : `"GroupImages"`
+                            } WHERE "GroupImages"."groupId" = "Group"."id" AND "GroupImages"."preview" = true)`
                         ),
                         'previewImage',
                     ]
@@ -98,7 +107,8 @@ router.get('/current', requireAuthentication, async (req, res, next) => {
                     organizerId: user.id,
                     id: [
                         Sequelize.literal(
-                            `SELECT "groupId" FROM "Memberships" WHERE "Memberships"."userId" = ${user.id} AND "Memberships"."status" = "approved"`
+                            `SELECT "groupId" FROM${(options.schema) ? `"${options.schema}"."Memberships"` : `"Memberships"`
+                            } WHERE "Memberships"."userId" = ${user.id} AND "Memberships"."status" = "approved"`
                         )
                     ]
                 }
@@ -212,7 +222,7 @@ const validateType = (typeLow) => {
     if (typeLow === 'online') {
         return 'Online';
     }
-    else if(typeLow === 'in person') {
+    else if (typeLow === 'in person') {
         return 'In Person';
     }
 
@@ -240,7 +250,7 @@ router.post('/', validateGroup, requireAuthentication, async (req, res, next) =>
 });
 
 //add roles for editing
-const addEditRoles = async(req, res, next) => {
+const addEditRoles = async (req, res, next) => {
     req.roles = {
         organizer: true,
         groupId: req.params.groupId
@@ -253,7 +263,7 @@ const addEditRoles = async(req, res, next) => {
 //edit a group
 router.put('/:groupId', validateGroup, requireAuthentication, exists, addEditRoles, requireAuthorization,
     async (req, res, next) => {
-        const {name, about, type, private, city, state} = req.body;
+        const { name, about, type, private, city, state } = req.body;
         const temp = { name, about, type, private, city, state };
         let editObj = {};
 
@@ -269,7 +279,7 @@ router.put('/:groupId', validateGroup, requireAuthentication, exists, addEditRol
             editObj.type = validateType(typeLow);
         }
 
-        try{
+        try {
             const group = await Group.editGroup(editObj, req.params.groupId);
 
             return res.json(group);
@@ -292,16 +302,16 @@ const addDeleteRoles = async (req, res, next) => {
 //delete a group
 router.delete('/:groupId', requireAuthentication, exists, addDeleteRoles, requireAuthorization,
     async (req, res, next) => {
-        const {groupId} = req.params;
+        const { groupId } = req.params;
 
         try {
             const del = await Group.deleteGroup(groupId);
 
             if (del) {
-                return res.json({message: 'Successfully deleted', statusCode: 200});
+                return res.json({ message: 'Successfully deleted', statusCode: 200 });
             }
         }
-        catch(err) {
+        catch (err) {
             next(err);
         }
     });

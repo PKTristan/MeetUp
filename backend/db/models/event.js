@@ -4,6 +4,11 @@ const {
 } = require('sequelize');
 
 
+let options = {};
+if (process.env.NODE_ENV === 'production') {
+  options.schema = process.env.SCHEMA; // schema in options
+};
+
 module.exports = (sequelize, DataTypes) => {
   class Event extends Model {
     /**
@@ -29,13 +34,16 @@ module.exports = (sequelize, DataTypes) => {
               'startDate',
               'endDate',
               [
-                sequelize.literal('(SELECT COUNT(*) FROM Attendances WHERE Attendances.eventId = Event.id AND (Attendances.status = "host" OR Attendances.status = "co-host" OR Attendances.status = "member"))'),
+                sequelize.literal(`(SELECT COUNT(*) FROM ${
+                  (options.schema) ? `"${options.schema}"."Attendances"` : `"Attendances"`
+                } WHERE "Attendances"."eventId" = "Event"."id" AND ("Attendances"."status" = "host" OR "Attendances"."status" = "co-host" OR "Attendances"."status" = "member"))`),
                 'numAttending'
               ],
               [
                 sequelize.literal(
-                  `(SELECT url FROM EventImages WHERE EventImages.eventId = Event.id AND EventImages.preview = true)`
-                ),
+                  `(SELECT url FROM ${
+                    (options.schema) ? `"${options.schema}"."EventImages"` : `"EventImages"`
+                } WHERE "EventImages"."eventId" = "Event"."id" AND "EventImages"."preview" = true)`),
                 'previewImage'
               ]
             ],
