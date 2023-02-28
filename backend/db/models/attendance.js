@@ -38,6 +38,24 @@ module.exports = (sequelize, DataTypes) => {
       }
     }
 
+    //request an attendance
+    static async requestAttendance(reqObj) {
+      try {
+        const created = await Attendance.create(reqObj);
+        const {id} = created;
+
+        const att = await Attendance.findAll({
+          attributes: ['userId', 'status'],
+          where: reqObj
+        });
+
+        return att;
+      }
+      catch(e) {
+        throw e;
+      }
+    }
+
 
     static associate(models) {
       Attendance.belongsTo(models.User, {

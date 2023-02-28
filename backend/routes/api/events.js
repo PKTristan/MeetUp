@@ -68,6 +68,16 @@ router.get('/:eventId', exists, async (req, res, next) => {
 
 router.use('/:eventId/attendees', exists, attendeesRouter);
 
+//add event roles
+const addEventReqRoles = async(req, res, next) => {
+    req.roles.member = {status: 'member'}
+
+    next();
+}
+
+router.use('/:eventId/attendance', requireAuthentication, exists, requireAuthorization, attendeesRouter);
+
+
 //////////////////////////////////////////////////////
 
 //add create event roles

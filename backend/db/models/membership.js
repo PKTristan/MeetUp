@@ -39,7 +39,6 @@ module.exports = (sequelize, DataTypes) => {
 
     //request membership
     static async requestMembership(memObj) {
-      console.log(memObj)
       try {
         const created = await Membership.create(memObj);
         const {id} = created;

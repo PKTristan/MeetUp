@@ -58,7 +58,22 @@ router.get('/', isHost, async(req, res, next) => {
     }
 });
 
+//////////////////////////////////
 
+router.post('/', async(req, res, next) => {
+    const userId = req.user.id;;
+    const {eventId} = req.params;
+    const status = 'pending';
+
+    try {
+        const response = await Attendance.requestAttendance({userId, eventId, status});
+
+        res.json(response);
+    }
+    catch(err) {
+        next(err);
+    }
+});
 
 
 
