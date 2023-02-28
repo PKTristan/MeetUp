@@ -37,6 +37,59 @@ module.exports = (sequelize, DataTypes) => {
       }
     }
 
+    //request membership
+    static async requestMembership(memObj) {
+      try {
+        const created = await Membership.create(memObj);
+        const {id} = created;
+
+        const member = await Membership.findAll({
+          attributes: [['id', 'memberId'], 'status'],
+          where: memObj
+        });
+
+        return member;
+      }
+      catch(e) {
+        throw e;
+      }
+    }
+
+    //update a memebrship
+    static async updateMember(memObj, id) {
+      try {
+        const updated = await Membership.update(memObj, {
+          where: { id }
+        });
+
+        if (!updated[0]) {
+          throw new Error('update failed');
+        }
+
+        const member = await Membership.findByPk(id, {
+          attributes:['id', 'userId', 'groupId', 'status']
+        });
+
+
+        return member;
+      }
+      catch(e) {
+        throw e;
+      }
+    }
+
+    //delete a membership
+    static async deleteMember(deleteObj) {
+      try {
+        return await Membership.destroy({
+          where: deleteObj
+        });
+      }
+      catch(e) {
+        throw e;
+      }
+    }
+
     static associate(models) {
       Membership.belongsTo(models.User, {
         foreignKey: 'userId'
@@ -58,7 +111,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     status: {
       type: DataTypes.ENUM,
-      values: ['pending', 'approved', 'denied', 'co-host'],
+      values: ['pending', 'member', 'denied', 'co-host', 'host'],
       allowNull: false
     }
   }, {

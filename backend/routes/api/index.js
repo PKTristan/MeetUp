@@ -23,6 +23,8 @@ router.use('/venues', venuesRouter);
 
 router.use('/events', eventsRouter);
 
+router.use('/group-images', groupsRouter);
+
 router.post('/test', (req, res) => {
     res.json({
         requestBody: req.body
