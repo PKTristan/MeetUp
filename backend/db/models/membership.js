@@ -37,6 +37,25 @@ module.exports = (sequelize, DataTypes) => {
       }
     }
 
+    //request membership
+    static async requestMembership(memObj) {
+      console.log(memObj)
+      try {
+        const created = await Membership.create(memObj);
+        const {id} = created;
+
+        const member = await Membership.findAll({
+          attributes: [['id', 'memberId'], 'status'],
+          where: memObj
+        });
+
+        return member;
+      }
+      catch(e) {
+        throw e;
+      }
+    }
+
     static associate(models) {
       Membership.belongsTo(models.User, {
         foreignKey: 'userId'

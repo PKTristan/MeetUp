@@ -57,5 +57,22 @@ router.get('/', isHost, async (req, res, next) => {
     }
 });
 
+////////////////////////////////////////
+router.post('/', async(req, res, next) => {
+    const {groupId} = req.params;
+    const userId = req.user.id;
+    const status = 'pending'
+
+    try {
+        const member = await Membership.requestMembership({ userId, groupId: parseInt(groupId), status});
+
+        res.json(member);
+    }
+    catch(err) {
+        next(err);
+    }
+});
+
+
 
 module.exports = router;

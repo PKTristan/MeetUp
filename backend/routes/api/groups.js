@@ -35,6 +35,9 @@ const exists = async (req, res, next) => {
 //route to members
 router.use('/:groupId/members', exists, membersRouter);
 
+//route to members for memberhsip request
+router.use('/:groupId/membership', requireAuthentication, exists, membersRouter)
+
 //get all groups
 router.get('/', async (req, res, next) => {
     try {

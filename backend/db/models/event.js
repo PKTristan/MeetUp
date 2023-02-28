@@ -67,7 +67,6 @@ module.exports = (sequelize, DataTypes) => {
       try {
         const created = await Event.create(eventObj);
         const {id} = created;
-        console.log(id)
 
         const event = await Event.findByPk(id, {
           attributes: [
