@@ -103,7 +103,7 @@ module.exports = (sequelize, DataTypes) => {
           throw new Error('update failed');
         }
 
-        const venue = await Event.findByPk(eventId, {
+        const event = await Event.findByPk(eventId, {
           attributes: [
             'id',
             'groupId',
@@ -118,7 +118,7 @@ module.exports = (sequelize, DataTypes) => {
           ]
         });
 
-        return venue;
+        return event;
       }
       catch(err) {
         throw err;

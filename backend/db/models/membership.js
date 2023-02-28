@@ -56,6 +56,31 @@ module.exports = (sequelize, DataTypes) => {
       }
     }
 
+    //update a memebrship
+    static async updateMember(memObj, id) {
+      try {
+        const updated = await Membership.update(memObj, {
+          where: { id }
+        });
+
+        if (!updated[0]) {
+          throw new Error('update failed');
+        }
+
+        const member = await Membership.findByPk(id, {
+          attributes: {
+            exclude: ['createdAt', 'updatedAt']
+          }
+        });
+
+
+        return member;
+      }
+      catch(e) {
+        throw e;
+      }
+    }
+
     static associate(models) {
       Membership.belongsTo(models.User, {
         foreignKey: 'userId'

@@ -9,6 +9,7 @@ const { Sequelize, Op } = require('sequelize');
 
 const router = express.Router({ mergeParams: true });
 
+
 //check if the user is the organizer or co host
 const isHost = async (req, res, next) => {
     const { groupId } = req.params;
@@ -58,6 +59,8 @@ router.get('/', isHost, async (req, res, next) => {
 });
 
 ////////////////////////////////////////
+
+//request a membership
 router.post('/', async(req, res, next) => {
     const {groupId} = req.params;
     const userId = req.user.id;
@@ -70,6 +73,50 @@ router.post('/', async(req, res, next) => {
     }
     catch(err) {
         next(err);
+    }
+});
+
+// add auth roles
+const addStatusRoles = async(req, res, next) => {
+    const {memberId, status} = req.body;
+    const member = await Membership.findByPk(memberId);
+
+    if (status === 'member') {
+        req.roles = {
+            organizer: true,
+            member: {
+                status: 'co-host'
+            },
+            groupId: member.groupId
+        }
+        next();
+    }
+    else if (status === 'co-host') {
+        req.roles = {
+            organizer: true,
+            groupId: member.groupId
+        }
+        next();
+    }
+else {
+    const err = new Error('not a valid status');
+
+    next(err);
+}
+}
+
+//change memberhsip stsatus
+router.put('/', addStatusRoles, requireAuthorization, async(req, res,next) => {
+    const {memberId, status} = req.body;
+    const id = memberId;
+
+    try {
+        const membership = await Membership.updateMember({status}, id);
+
+        return res.json(membership);
+    }
+    catch(e) {
+        next(e);
     }
 });
 

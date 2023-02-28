@@ -99,7 +99,7 @@ const requireAuthorization = async function (req, res, next) {
     let isMember = false;
     let isAttendee = false;
     const { organizer, member, attendee, groupId, eventId } = req.roles;
-
+    console.log(organizer)
 
     if (organizer) {
         const group = await Group.findByPk(groupId);
