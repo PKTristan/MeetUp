@@ -2,6 +2,12 @@
 const {
   Model
 } = require('sequelize');
+
+let options = {};
+if (process.env.NODE_ENV === 'production') {
+  options.schema = process.env.SCHEMA; // schema in options
+};
+
 module.exports = (sequelize, DataTypes) => {
   class Group extends Model {
     //adds a group to the table

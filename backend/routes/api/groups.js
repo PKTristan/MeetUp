@@ -131,7 +131,7 @@ router.get('/:groupId', async (req, res, next) => {
     try {
         const group = await Group.getById(groupId);
 
-        // console.log(group)
+         //console.log(group)
         return res.json(group);
     }
     catch (error) {
@@ -142,6 +142,7 @@ router.get('/:groupId', async (req, res, next) => {
             err.errors = ['The provided group id doe snot exist.'];
             return next(err);
         }
+        next(error);
     }
 });
 
