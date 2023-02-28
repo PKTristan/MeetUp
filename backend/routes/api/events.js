@@ -6,6 +6,7 @@ const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 const { Event, EventImage, Venue } = require('../../db/models');
 const { Sequelize } = require('sequelize');
+const attendeesRouter = require('./attendees.js');
 
 const router = express.Router({ mergeParams: true });
 
@@ -64,6 +65,8 @@ router.get('/:eventId', exists, async (req, res, next) => {
         next(err);
     }
 });
+
+router.use('/:eventId/attendees', exists, attendeesRouter);
 
 //////////////////////////////////////////////////////
 

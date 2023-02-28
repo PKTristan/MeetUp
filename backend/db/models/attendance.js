@@ -9,6 +9,36 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
+
+    //get the attendees
+    static async getAttendeesBy(whereObj) {
+      try {
+        const attendees = await Attendance.findAll({
+          where: whereObj,
+          include: {
+            model: sequelize.models.User,
+            attributes: ['id', 'firstName', 'lastName'],
+          }
+        });
+
+        const formatAttendees = attendees.map(attendee => ({
+          id: attendee.User.id,
+          firstName: attendee.User.firstName,
+          lastName: attendee.User.lastName,
+          Attendance: {
+            status: attendee.status
+          }
+        }));
+
+        return {Attendees: formatAttendees};
+
+      }
+      catch(e) {
+        throw e;
+      }
+    }
+
+
     static associate(models) {
       Attendance.belongsTo(models.User, {
         foreignKey: 'userId'

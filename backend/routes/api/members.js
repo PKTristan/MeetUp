@@ -1,4 +1,4 @@
-//backend/routes/api/events.js
+//backend/routes/api/members.js
 const express = require('express');
 
 const { requireAuthentication, requireAuthorization } = require('../../utils/auth');
@@ -48,7 +48,7 @@ router.get('/', isHost, async (req, res, next) => {
             return res.json(members);
         }
         else {
-            const members = await Membership.getMembersBy({ status: ['approved', 'co-host'], groupId });
+            const members = await Membership.getMembersBy({ status: ['member', 'co-host'], groupId });
 
             return res.json(members);
         }
