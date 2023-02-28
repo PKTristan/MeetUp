@@ -36,7 +36,7 @@ module.exports = (sequelize, DataTypes) => {
               [
                 sequelize.literal(`(SELECT COUNT(*) FROM ${
                   (options.schema) ? `"${options.schema}"."Attendances"` : `"Attendances"`
-                } WHERE "Attendances"."eventId" = "Event"."id" AND ("Attendances"."status" = "host" OR "Attendances"."status" = "co-host" OR "Attendances"."status" = "member"))`),
+                } WHERE "Attendances"."eventId" = "Event"."id" AND ("Attendances"."status" = 'host' OR "Attendances"."status" = 'co-host' OR "Attendances"."status" = 'member'))`),
                 'numAttending'
               ],
               [

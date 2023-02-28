@@ -108,7 +108,7 @@ router.get('/current', requireAuthentication, async (req, res, next) => {
                     id: [
                         Sequelize.literal(
                             `SELECT "groupId" FROM${(options.schema) ? `"${options.schema}"."Memberships"` : `"Memberships"`
-                            } WHERE "Memberships"."userId" = ${user.id} AND "Memberships"."status" = "approved"`
+                            } WHERE "Memberships"."userId" = ${user.id} AND "Memberships"."status" = 'member'`
                         )
                     ]
                 }
