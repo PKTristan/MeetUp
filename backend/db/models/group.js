@@ -24,7 +24,7 @@ module.exports = (sequelize, DataTypes) => {
           attributes: {
             include: [
               [
-                sequelize.literal(`(SELECT COUNT(*) FROM "Memberships" WHERE "Memberships"."groupId" = ${id} AND "Memberships"."status" = 'approved')`),
+                sequelize.literal(`(SELECT COUNT(*) FROM "Memberships" WHERE "Memberships"."groupId" = ${id} AND ("Memberships"."status" = 'member' OR "Memberships"."status" = 'co-host' OR "Memberships"."status" = 'host'))`),
                 'numMembers'
               ]
             ]
