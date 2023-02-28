@@ -56,6 +56,34 @@ module.exports = (sequelize, DataTypes) => {
       }
     }
 
+    //update an attendee
+    static async updateAttendee(upObj) {
+      try {
+        const updated = await Attendance.update(upObj, {
+          where: {
+            userId: upObj.userId,
+            eventId: upObj.eventId
+          }
+        });
+
+        if (!updated[0]) {
+          throw new Error('update failed');
+        }
+
+        const attendee = await Attendance.findAll({
+          attributes: ['userId', 'status'],
+          where: upObj
+        });
+
+
+
+        return attendee;
+      }
+      catch (e) {
+        throw e;
+      }
+    }
+
 
     static associate(models) {
       Attendance.belongsTo(models.User, {

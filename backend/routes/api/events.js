@@ -75,7 +75,7 @@ const addEventReqRoles = async(req, res, next) => {
     next();
 }
 
-router.use('/:eventId/attendance', requireAuthentication, exists, requireAuthorization, attendeesRouter);
+router.use('/:eventId/attendance', requireAuthentication, exists, attendeesRouter);
 
 
 //////////////////////////////////////////////////////
