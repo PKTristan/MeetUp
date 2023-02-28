@@ -5,7 +5,7 @@ const { requireAuthentication, requireAuthorization } = require('../../utils/aut
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 const { Membership, Group } = require('../../db/models');
-const { Sequelize, Op } = require('sequelize');
+const { Sequelize, Op, EmptyResultError } = require('sequelize');
 
 const router = express.Router({ mergeParams: true });
 
@@ -61,24 +61,24 @@ router.get('/', isHost, async (req, res, next) => {
 ////////////////////////////////////////
 
 //request a membership
-router.post('/', async(req, res, next) => {
-    const {groupId} = req.params;
+router.post('/', async (req, res, next) => {
+    const { groupId } = req.params;
     const userId = req.user.id;
     const status = 'pending'
 
     try {
-        const member = await Membership.requestMembership({ userId, groupId: parseInt(groupId), status});
+        const member = await Membership.requestMembership({ userId, groupId: parseInt(groupId), status });
 
         res.json(member);
     }
-    catch(err) {
+    catch (err) {
         next(err);
     }
 });
 
 // add auth roles
-const addStatusRoles = async(req, res, next) => {
-    const {memberId, status} = req.body;
+const addStatusRoles = async (req, res, next) => {
+    const { memberId, status } = req.body;
     const member = await Membership.findByPk(memberId);
 
     if (status === 'member') {
@@ -98,22 +98,79 @@ const addStatusRoles = async(req, res, next) => {
         }
         next();
     }
-else {
-    const err = new Error('not a valid status');
+    else {
+        const err = new Error('not a valid status');
 
-    next(err);
-}
+        next(err);
+    }
 }
 
 //change memberhsip stsatus
-router.put('/', addStatusRoles, requireAuthorization, async(req, res,next) => {
-    const {memberId, status} = req.body;
+router.put('/', addStatusRoles, requireAuthorization, async (req, res, next) => {
+    const { memberId, status } = req.body;
     const id = memberId;
 
     try {
-        const membership = await Membership.updateMember({status}, id);
+        const memberhsip = await Membership.updateMember({ status }, id);
 
         return res.json(membership);
+    }
+    catch (e) {
+        next(e);
+    }
+});
+
+//add roles for deleting
+const addDeleteRoles = async (req, res, next) => {
+    const { groupId } = req.params;
+    const {memberId} = req.body;
+    const userId = req.user.id;
+
+
+    try {
+        const member = await Membership.findByPk(memberId);
+        if(!member) {
+            const err = new Error('No such Membership Exists');
+            err.status = 404;
+            throw err;
+        }
+
+        if (member.groupId === groupId && member.userId === userId) {
+            req.roles = {
+                organizer: true,
+                member: {
+                    status: 'member'
+                },
+                groupId
+            }
+            next();
+        }
+    }
+    catch (err) {
+        next(err);
+    }
+
+    req.roles = {
+        organizer: true,
+        groupId
+    }
+    next();
+
+};
+
+router.delete('/', addDeleteRoles, requireAuthorization, async(req, res, next) => {
+    const {memberId} = req.body;
+    try {
+        const del = await Membership.deleteMember({id: memberId});
+
+        if (del) {
+            return res.json({ message: 'Successfully deleted', statusCode: 200 });
+        }
+        else {
+            const err = new Error('No such Membership Exists');
+            err.status = 404;
+            throw err;
+        }
     }
     catch(e) {
         next(e);

@@ -68,13 +68,23 @@ module.exports = (sequelize, DataTypes) => {
         }
 
         const member = await Membership.findByPk(id, {
-          attributes: {
-            exclude: ['createdAt', 'updatedAt']
-          }
+          attributes:['id', 'userId', 'groupId', 'status']
         });
 
 
         return member;
+      }
+      catch(e) {
+        throw e;
+      }
+    }
+
+    //delete a membership
+    static async deleteMember(deleteObj) {
+      try {
+        return await Membership.destroy({
+          where: deleteObj
+        });
       }
       catch(e) {
         throw e;
