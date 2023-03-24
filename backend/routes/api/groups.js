@@ -53,7 +53,7 @@ router.get('/', async (req, res, next) => {
                     [
                         Sequelize.literal(
                             `(SELECT COUNT(*) FROM ${(options.schema) ? `"${options.schema}"."Memberships"` : `"Memberships"`
-                            } WHERE "Memberships"."groupId" = "Group"."id")`
+                            } WHERE "Memberships"."groupId" = "Group"."id" GROUP BY "Memberships"."groupId")`
                         ),
                         'numMembers',
                     ],
@@ -61,7 +61,7 @@ router.get('/', async (req, res, next) => {
                     [
                         Sequelize.literal(
                             `(SELECT "url" FROM ${(options.schema) ? `"${options.schema}"."GroupImages"` : `"GroupImages"`
-                            } WHERE "GroupImages"."groupId" = "Group"."id" AND "GroupImages"."preview" = true)`
+                            } WHERE "GroupImages"."groupId" = "Group"."id" AND "GroupImages"."preview" = true GROUP BY "GroupImages"."groupId")`
                         ),
                         'previewImage',
                     ]
