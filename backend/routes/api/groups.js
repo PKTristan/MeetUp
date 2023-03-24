@@ -61,7 +61,7 @@ router.get('/', async (req, res, next) => {
                     [
                         Sequelize.literal(
                             `(SELECT "url" FROM ${(options.schema) ? `"${options.schema}"."GroupImages"` : `"GroupImages"`
-                            } WHERE "GroupImages"."groupId" = "Group"."id" AND "GroupImages"."preview" = true GROUP BY "GroupImages"."groupId")`
+                            } WHERE "GroupImages"."groupId" = "Group"."id" AND "GroupImages"."preview" = true ORDER BY "GroupImages"."id" LIMIT 1)`
                         ),
                         'previewImage',
                     ]
