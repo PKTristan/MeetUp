@@ -125,7 +125,7 @@ router.get('/current', requireAuthentication, async (req, res, next) => {
 });
 
 //get group details by id
-router.get('/:groupId', async (req, res, next) => {
+router.get('/:groupId', requireAuthentication, async (req, res, next) => {
     const { groupId } = req.params;
 
     try {
