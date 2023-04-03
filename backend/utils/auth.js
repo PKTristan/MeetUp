@@ -142,7 +142,7 @@ const requireAuthorization = async function (req, res, next) {
         const isUnauth = () => {
             let status = true;
 
-            for (stat in attendee) {
+            for (let stat in attendee) {
                 if (!attendance || attendance.status === stat) {
                     status = false;
                 }
