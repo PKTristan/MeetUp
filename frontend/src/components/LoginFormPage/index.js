@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { login, userSelector } from "../../store/session";
+import './LoginForm.css';
 
 
 const LoginFormPage = () => {
@@ -12,30 +13,34 @@ const LoginFormPage = () => {
 
     const [credential, setCredential] = useState("");
     const [password, setPassword] = useState("");
+    const [errors, setErrors] = useState([]);
 
     const updateCredential = (e) => setCredential(e.target.value);
     const updatePassword = (e) => setPassword(e.target.value);
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        setErrors([]);
 
         const user = {
             credential,
             password
         };
 
-        dispatch(login(user));
-
-        setPassword("");
-
-        history.push('/');
+       return dispatch(login(user)).catch(async (res) => {
+            const data = await res.json();
+            if (data && data.errors) {
+                const err = Object.values(data.errors);
+                setErrors(err);
+            }
+        });
     };
 
     useEffect(() => {
         if (user) {
             history.push('/');
         }
-    }, []);
+    }, [user]);
 
 
     return (
@@ -43,6 +48,9 @@ const LoginFormPage = () => {
             <h1>Login Form Page</h1>
             <section className="login-form">
                 <form onSubmit={handleSubmit}>
+                    <ul>
+                        {errors.map((error, idx) => <li key={idx}>{error}</li>)}
+                    </ul>
                     <div className="form-group credential">
                         <label htmlFor="credential">Username or Email: </label>
                         <input type="text" name="credential" id="credential" value={credential} onChange={updateCredential} />

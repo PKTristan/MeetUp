@@ -31,6 +31,8 @@ export const login = (body) => async dispatch => {
         const {user} = await response.json();
         dispatch(loadUser(user));
     }
+
+    return response;
 };
 
 //get current session
@@ -41,6 +43,8 @@ export const currentUser = () => async dispatch => {
         const {user} = await response.json();
         dispatch(loadUser(user));
     }
+
+    return response;
 };
 
 //logout thunk action creator
@@ -52,6 +56,8 @@ export const logout = () => async(dispatch) => {
     if (response.ok) {
         dispatch(removeUser());
     }
+
+    return response;
 };
 
 const initialState = { user: null };
@@ -63,7 +69,6 @@ const sessionReducer = (state = Object.assign({}, initialState), action) => {
     switch (action.type) {
 
         case (LOAD_USER):
-            console.log(action.user);
             mutState.user = action.user || null;
 
             return mutState;

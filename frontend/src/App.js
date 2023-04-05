@@ -17,14 +17,16 @@ function App() {
   };
 
   return (
-    <Switch>
-      <Route exact path="/">
-        <h1>Hello from App</h1>
-        <NavLink to="/login">Login</NavLink>
-        <button type="button" onClick={handleClick}>Logout</button>
-      </Route>
-      <Route exaxt path="/login" component={LoginFormPage} />
-    </Switch>
+    <>
+      <Switch>
+        <Route exact path="/">
+          <h1>Hello from App</h1>
+          <NavLink to="/login">Login</NavLink>
+          <button type="button" onClick={handleClick}>Logout</button>
+        </Route>
+        <Route exaxt path="/login" component={LoginFormPage} />
+      </Switch>
+    </>
   );
 }
 
