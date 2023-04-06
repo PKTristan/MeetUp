@@ -5,6 +5,8 @@ import { currentUser } from "./store/session";
 import { useDispatch } from "react-redux";
 import SignupFormPage from "./components/SignupFormPage";
 import Navigation from "./components/Navigation";
+import Home from "./components/Home";
+import logo from "./assets/meetup-logo.png";
 
 
 function App() {
@@ -17,14 +19,15 @@ function App() {
 
   return (
     <>
+      <img className="corner-logo" src={logo} alt="Meetup logo" />
       <Navigation />
-      <Switch>
-        <Route exact path="/">
-          <h1>Hello from App</h1>
-        </Route>
-        <Route exact path="/login" component={LoginFormPage} />
-        <Route exact path="/signup" component={SignupFormPage} />
-      </Switch>
+      <div className="app-routes">
+        <Switch>
+          <Route exact path="/" component={Home} />
+          <Route exact path="/login" component={LoginFormPage} />
+          <Route exact path="/signup" component={SignupFormPage} />
+        </Switch>
+      </div>
     </>
   );
 }

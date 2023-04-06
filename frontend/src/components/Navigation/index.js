@@ -8,22 +8,31 @@ import './Navigation.css';
 const Navigation = () => {
     const user = useSelector(sessionActions.userSelector);
 
+    const style = (isActive) => ({
+
+        textDecoration: isActive ? 'underline' : 'none',
+    });
+
     //return a UL that acts as the navigation bar
     if (user) {
         return (
-            <ul className="navigation">
-                <ProfileButton user={user}/>
+            <div>
+                <ul className="navigation">
+                    <ProfileButton user={user} />
 
-                <NavLink to="/"> HOME </NavLink>
-            </ul>
+                    <div><NavLink exact to="/" className="navlink" style={style}> HOME </NavLink></div>
+                </ul>
+            </div>
         );
     } else {
         return (
-            <ul className="navigation">
-                <NavLink to="/"> HOME </NavLink>
-                <NavLink to="/signup"> SIGN UP </NavLink>
-                <NavLink to="/login"> LOGIN </NavLink>
-            </ul>
+            <div>
+                <ul className="navigation">
+                    <div><NavLink exact to="/" className='navlink' style={style}> HOME </NavLink></div>
+                    <div><NavLink to="/signup" className='navlink' style={style}> SIGN UP </NavLink></div>
+                    <div><NavLink to="/login" className='navlink' style={style}> LOGIN </NavLink></div>
+                </ul>
+            </div>
         );
     }
 };
