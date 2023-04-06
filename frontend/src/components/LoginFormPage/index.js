@@ -14,6 +14,7 @@ const LoginFormPage = () => {
     const [credential, setCredential] = useState("");
     const [password, setPassword] = useState("");
     const [errors, setErrors] = useState([]);
+    const [modalOpen, setModalOpen] = useState(false);
 
     const updateCredential = (e) => setCredential(e.target.value);
     const updatePassword = (e) => setPassword(e.target.value);
