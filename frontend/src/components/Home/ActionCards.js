@@ -16,7 +16,7 @@ const ActionCards = ({ paragraphs }) => {
                 <p>{paragraphs[3]}</p>
             </div>
             <div className="card">
-                <img src="https://secure.meetupstatic.com/next/images/shared/joinGroup.svg?w=256" alt='group image'></img>
+                <img src="https://secure.meetupstatic.com/next/images/shared/joinGroup.svg?w=256" alt='group icon'></img>
                 <h3>Start a new group</h3>
                 <p>{paragraphs[4]}</p>
             </div>
