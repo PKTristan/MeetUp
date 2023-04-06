@@ -8,19 +8,13 @@ const Navigation = () => {
     const user = useSelector(sessionActions.userSelector);
     const dispatch = useDispatch();
 
-    const handleLogout = (e) => {
-        e.preventDefault();
-        dispatch(sessionActions.logout());
-    };
-
-
     //return a UL that acts as the navigation bar
     if (user) {
         return (
             <ul className="navigation">
-                <ProfileButton />
+                <ProfileButton user={user}/>
+
                 <NavLink to="/"> HOME </NavLink>
-                <button type="button" onClick={handleLogout}> LOGOUT </button>
             </ul>
         );
     } else {
