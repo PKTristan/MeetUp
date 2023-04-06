@@ -40,7 +40,7 @@ const LoginFormPage = () => {
         if (user) {
             history.push('/');
         }
-    }, [user]);
+    }, [user, history]);
 
 
     return (
@@ -57,10 +57,11 @@ const LoginFormPage = () => {
                     </div>
                     <div className="form-group password">
                         <label htmlFor="password">Password: </label>
-                        <input type="text" name="password" id="password" value={password} onChange={updatePassword} />
+                        <input type="password" name="password" id="password" value={password} onChange={updatePassword} />
                     </div>
 
                     <button type="submit">Login</button>
+                    <button type="button" onClick={() => history.push('/signup')}>Signup</button>
                 </form>
             </section>
         </div>

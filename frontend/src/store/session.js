@@ -47,6 +47,21 @@ export const currentUser = () => async dispatch => {
     return response;
 };
 
+//sign up a user
+export const signup = (body) => async dispatch => {
+    const response = await csrfFetch('/api/users', {
+        method: 'POST',
+        body: JSON.stringify(body)
+    });
+
+    if (response.ok) {
+        const {user} = await response.json();
+        dispatch(loadUser(user));
+    }
+
+    return response;
+};
+
 //logout thunk action creator
 export const logout = () => async(dispatch) => {
     const response = await csrfFetch('/api/session', {

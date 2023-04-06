@@ -1,8 +1,10 @@
 import { useEffect } from "react";
-import { NavLink, Route, Switch } from "react-router-dom";
+import { Route, Switch } from "react-router-dom";
 import LoginFormPage from "./components/LoginFormPage";
-import { logout, currentUser } from "./store/session";
+import { currentUser } from "./store/session";
 import { useDispatch } from "react-redux";
+import SignupFormPage from "./components/SignupFormPage";
+import Navigation from "./components/Navigation";
 
 
 function App() {
@@ -10,21 +12,18 @@ function App() {
 
   useEffect(() => {
     dispatch(currentUser());
-  }, []);
+  }, [dispatch]);
 
-  const handleClick = () => {
-    dispatch(logout());
-  };
 
   return (
     <>
+      <Navigation />
       <Switch>
         <Route exact path="/">
           <h1>Hello from App</h1>
-          <NavLink to="/login">Login</NavLink>
-          <button type="button" onClick={handleClick}>Logout</button>
         </Route>
-        <Route exaxt path="/login" component={LoginFormPage} />
+        <Route exact path="/login" component={LoginFormPage} />
+        <Route exact path="/signup" component={SignupFormPage} />
       </Switch>
     </>
   );
