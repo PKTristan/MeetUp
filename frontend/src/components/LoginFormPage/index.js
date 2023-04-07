@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { login, userSelector } from "../../store/session";
+import InterimModal from "../Modal";
+import SignupFormPage from "../SignupFormPage";
 import './LoginForm.css';
 
 
@@ -14,7 +16,6 @@ const LoginFormPage = () => {
     const [credential, setCredential] = useState("");
     const [password, setPassword] = useState("");
     const [errors, setErrors] = useState([]);
-    const [modalOpen, setModalOpen] = useState(false);
 
     const updateCredential = (e) => setCredential(e.target.value);
     const updatePassword = (e) => setPassword(e.target.value);
@@ -28,7 +29,7 @@ const LoginFormPage = () => {
             password
         };
 
-       return dispatch(login(user)).catch(async (res) => {
+        return dispatch(login(user)).catch(async (res) => {
             const data = await res.json();
             if (data && data.errors) {
                 const err = Object.values(data.errors);
@@ -45,24 +46,23 @@ const LoginFormPage = () => {
 
 
     return (
-        <div>
-            <h1>Login Form Page</h1>
+        <div className="div-login-form">
+            <h1>Log in</h1>
             <section className="login-form">
                 <form onSubmit={handleSubmit}>
                     <ul>
                         {errors.map((error, idx) => <li key={idx}>{error}</li>)}
                     </ul>
                     <div className="form-group credential">
-                        <label htmlFor="credential">Username or Email: </label>
-                        <input type="text" name="credential" id="credential" value={credential} onChange={updateCredential} />
+                        <input type="text" name="credential" id="credential" placeholder="username or email" value={credential} onChange={updateCredential} />
                     </div>
                     <div className="form-group password">
-                        <label htmlFor="password">Password: </label>
-                        <input type="password" name="password" id="password" value={password} onChange={updatePassword} />
+                        <input type="password" name="password" id="password" placeholder="password" value={password} onChange={updatePassword} />
                     </div>
-
-                    <button type="submit">Login</button>
-                    <button type="button" onClick={() => history.push('/signup')}>Signup</button>
+                    <div className="button-container">
+                        <button type="submit">Login</button>
+                        <InterimModal Component={SignupFormPage} buttonLabel="Sign up"/>
+                    </div>
                 </form>
             </section>
         </div>

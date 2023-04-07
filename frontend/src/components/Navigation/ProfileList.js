@@ -58,10 +58,10 @@ const ProfileList = ({ args: { dropdown, setDropdown }}) => {
                         <button type='button' onClick={handleHome}>Home</button>
                     </li>
                     <li>
-                        <InterimModal Component={LoginFormPage} bName="Login" />
+                        <InterimModal Component={LoginFormPage} buttonLabel="Login" />
                     </li>
                     <li>
-                        <InterimModal Component={SignupFormPage} bName="Signup" />
+                        <InterimModal Component={SignupFormPage} buttonLabel="Signup" />
                     </li>
                 </ul>
             </div>
