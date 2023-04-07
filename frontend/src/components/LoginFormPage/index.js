@@ -39,11 +39,12 @@ const LoginFormPage = ({ setModal }) => {
 
             if (!credValid) mutErr.push(credMsg);
             if (!passValid) mutErr.push(passMsg);
+
+            setErrors(mutErr);
         }
-
-        setErrors(mutErr);
-
-        if (errors.length === 0) setDisabled(false);
+        else {
+            setDisabled(false);
+        }
     };
 
     useEffect(() => validateInput(), [credential, password]);
