@@ -34,3 +34,7 @@ button {
 button:hover {
     cursor: pointer;
 }
+
+ul .error  {
+    color: red;
+}
