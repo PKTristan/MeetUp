@@ -4,8 +4,6 @@ import { useHistory } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as sessionActions from "../../store/session";
-import InterimModal from "../Modal";
-import LoginFormPage from "../LoginFormPage";
 
 const SignupFormPage = () => {
     const dispatch = useDispatch();
@@ -71,7 +69,6 @@ const SignupFormPage = () => {
                     </div>
                     <div className="button-container">
                         <button type="submit">Sign Up</button>
-                        <InterimModal Component={LoginFormPage} buttonLabel="Log in" />
                     </div>
                 </form>
             </section>

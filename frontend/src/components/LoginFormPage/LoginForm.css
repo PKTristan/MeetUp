@@ -16,27 +16,32 @@ h1 {
 
 .button-container {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     margin-top: 20px;
 }
 
 .button-container button {
-    width: calc(50% - 10px);
+    width: 100%;
     border-radius: 5px;
-    border: none;
+    border: 1px solid #aaa;
+    background-color: #fff;
+    border-color: #aaa;
+    border-radius: 8px;
     padding: 10px 0;
     font-size: 1rem;
+}
+
+
+.button-container button:enabled {
+    background-color: #e32359;
+    border-color:#e32359;
+    color: #fff;
     cursor: pointer;
 }
 
-
-.button-container button--enabled {
-    background-color: #ff0000;
-    color: #fff;
-}
-
-.button-container button--disabled {
+.button-container button:disabled {
     background-color: #fff;
     color: #aaa;
     border: 1px solid #aaa;
+    cursor: not-allowed;
 }
