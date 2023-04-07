@@ -88,7 +88,7 @@ const LoginFormPage = ({ setModal }) => {
                             id="credential"
                             placeholder="username or email"
                             value={credential}
-                            ononChange={updateCredential}
+                            onChange={updateCredential}
                         />
                     </div>
                     <div className="form-group password">
