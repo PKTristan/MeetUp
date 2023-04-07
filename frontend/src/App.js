@@ -7,6 +7,9 @@ import SignupFormPage from "./components/SignupFormPage";
 import Navigation from "./components/Navigation";
 import Home from "./components/Home";
 import logo from "./assets/meetup-logo.png";
+import Modal from 'react-modal';
+
+Modal.setAppElement('#root');
 
 
 function App() {
