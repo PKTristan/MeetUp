@@ -12,19 +12,10 @@ const ProfileList = ({ args: { dropdown, setDropdown }}) => {
     const user = useSelector(sessionActions.userSelector);
     const dispatch = useDispatch();
     const history = useHistory();
-    console.log(dropdown)
 
     const handleLogout = (e) => {
         e.preventDefault();
         dispatch(sessionActions.logout());
-    };
-
-    const handleLogin = (e) => {
-        e.preventDefault();
-    };
-
-    const handleSignup = (e) => {
-        e.preventDefault();
     };
 
     const handleHome = (e) => {
