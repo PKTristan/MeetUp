@@ -1,12 +1,14 @@
 // /frontend/src/components/Groups/GroupList.js
-import { useSelector } from "react-redux";
+import { useSelector} from "react-redux";
 import { allGroupsSelector } from "../../store/groups.js";
 import { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 
 
+
 const GroupList = () => {
     const history = useHistory();
+
     const allGroups = useSelector(allGroupsSelector);
     const [allGroupsArr, setAllGroupsArr] = useState([]);
 
@@ -16,12 +18,18 @@ const GroupList = () => {
         }
     }, [allGroups]);
 
+    const handleClick = (id) => (e) => {
+        e.preventDefault();
+
+        history.push(`/groups/${id}`);
+    }
+
     return (
         <div className="group-list" >
             {
                 allGroupsArr.map(group => {
                     return (
-                        <div className="group-list-item" key={group.id} onClick={() => history.push(`/groups/${group.id}`)}>
+                        <div className="group-list-item" key={group.id} onClick={handleClick(group.id)}>
                             <div className="div-img">
                                 <img className="group-img" src={group.previewImage} alt={group.name} />
                             </div>
@@ -29,7 +37,7 @@ const GroupList = () => {
                                 <h2 className="group-name">{group.name}</h2>
                                 <h3 className="group-location">{group.city + ", " + group.state}</h3>
                                 <p className="group-about">{group.about}</p>
-                                <h3 className="group-members-type"> {group.numMembers + " members - - - " + group.type}</h3>
+                                <h3 className="group-members-type"> {group.numMembers + " members"} &#183; {((group.private) ? 'Private' : 'Public')}</h3>
                             </div>
                         </div>
                     );

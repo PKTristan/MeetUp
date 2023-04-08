@@ -8,6 +8,7 @@ const Groups = () => {
     return (
         <div className="groups-wrapper" >
             <NavTab />
+            <h3>Groups in Meetup</h3>
             <GroupList />
         </div>
     )

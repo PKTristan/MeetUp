@@ -8,7 +8,7 @@ import * as sessionActions from "../../store/session";
 const SignupFormPage = () => {
     const dispatch = useDispatch();
     const history = useHistory();
-    const user = useSelector(sessionActions.userSelector);
+    const user = useSelector(sessionActions.currentUserSelector);
 
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");

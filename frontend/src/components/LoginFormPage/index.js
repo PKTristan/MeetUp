@@ -1,15 +1,15 @@
 // frontend/src/components/LoginFormPage/index.js
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { login, userSelector } from "../../store/session";
+import { currentUserSelector, login} from "../../store/session";
 import './LoginForm.css';
 
 
 const LoginFormPage = ({ setModal }) => {
     const dispatch = useDispatch();
     const history = useHistory();
-    const user = useSelector(userSelector);
+    const user = useSelector(currentUserSelector);
 
     const [credential, setCredential] = useState("");
     const [password, setPassword] = useState("");
@@ -26,7 +26,7 @@ const LoginFormPage = ({ setModal }) => {
         setPassword(e.target.value);
     };
 
-    const validateInput = () => {
+    const validateInput = useCallback(() => {
         let mutErr = Array.from(errors);
         const credValid = (credential.length >= 4);
         const passValid = (password.length >= 6);
@@ -45,7 +45,7 @@ const LoginFormPage = ({ setModal }) => {
         }
 
         setErrors(mutErr);
-    };
+    }, [credential, password, disabled, errors]);
 
     useEffect(() => validateInput(), [credential, password, validateInput]);
 
