@@ -1,11 +1,17 @@
 // /frontend/src/store/groups
 import { csrfFetch } from "./csrf";
-import { useDispatch } from "react-redux";
 import normalizeData from "./normalizeData";
 
-export const LOAD_GROUPS = 'groups/LOAD_GROUPS';
+export const CLEAR_OPTIONS = {
+    all: 'allGroups',
+    details: 'groupDetails'
+}
+
+const LOAD_GROUPS = 'groups/LOAD_GROUPS';
+const LOAD_GROUP_DETAILS = 'groups/LOAD_GROUP_DETAILS';
 export const CLEAR_GROUPS = 'groups/CLEAR_GROUPS';
 
+// action creators
 
 //action creator to load groups
 export const loadGroups = (groups) => ({
@@ -13,9 +19,18 @@ export const loadGroups = (groups) => ({
     groups
 });
 
-export const clearGroups = () => ({
-    type: CLEAR_GROUPS
+export const clearGroups = (options = []) => ({
+    type: CLEAR_GROUPS,
+    options
 });
+
+//action creator to load specific details of a group
+export const loadGroupDetails = (group) => ({
+    type: LOAD_GROUP_DETAILS,
+    group
+})
+
+
 
 
 //thunk action creator to fetch the /api/groups api
@@ -31,25 +46,50 @@ export const getAllGroups = () => async (dispatch) => {
     return response;
 }
 
+
+//thunk action creator to fetch the /api/groups/:id api
+export const getGroupDetails = (id) => async (dispatch) => {
+    const response = await csrfFetch(`/api/groups/${id}`);
+
+    if (response.ok) {
+        const data = await response.json();
+        dispatch(loadGroupDetails(data));
+    }
+
+    return response;
+}
+
+
+
+//selectors
+
 export const allGroupsSelector = (state) => state.groups.allGroups;
+export const groupDetailsSelector = (state) => state.groups.groupDetails;
 
 
 //groups reducer
-const initialState = { allGroups: null };
+const initialState = { allGroups: null, groupDetails: null};
 
 const groupsReducer = (state = initialState, action) => {
     let mutState = Object.assign(state);
 
     switch(action.type) {
         case LOAD_GROUPS:
-            mutState.allGroups = normalizeData(action.groups);
+            // mutState.allGroups = normalizeData(action.groups);
 
-            return mutState;
+            return {...mutState, allGroups: normalizeData(action.groups)};
 
         case CLEAR_GROUPS:
-            mutState.allGroups = null;
+            action.options.forEach((option) => {
+                mutState[option] = null;
+            });
 
-            return mutState;
+            return {...mutState};
+
+        case LOAD_GROUP_DETAILS:
+            // mutState.groupDetails = action.group;
+
+        return {...mutState, groupDetails: action.group};
 
         default:
             return state;

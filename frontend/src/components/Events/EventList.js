@@ -1,5 +1,5 @@
-//
-/frontend/src/components/Events/EventList.js
+// frontend/src/components/Events/EventList.js
+
 
 const EventList = () => {
 
