@@ -60,9 +60,9 @@ const requireAuthentication = async function (req, _res, next,) {
     const { token } = req.cookies;
 
     //create err for unauthorized
-    const err = new Error('Unauthorized');
-    err.title = 'Unauthorized';
-    err.errors = ['Unauthorized'];
+    const err = new Error('Authentication required');
+    err.title = 'Authentication required';
+    err.errors = ['Authentication required'];
     err.status = 401;
 
     console.log(token);
