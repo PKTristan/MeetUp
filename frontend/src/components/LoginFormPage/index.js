@@ -32,22 +32,22 @@ const LoginFormPage = ({ setModal }) => {
         const passValid = (password.length >= 6);
         const credMsg = 'Credential must be at least 4 characters';
         const passMsg = 'Password must be at least 6 characters';
-        mutErr = mutErr.filter((error) => (error !== credMsg) && (error !== passMsg));
+        mutErr = mutErr.filter((error) => ((error !== credMsg) && (error !== passMsg)));
 
         if (!credValid || !passValid) {
             if (!disabled) setDisabled(true);
 
             if (!credValid) mutErr.push(credMsg);
             if (!passValid) mutErr.push(passMsg);
-
-            setErrors(mutErr);
         }
         else {
             setDisabled(false);
         }
+
+        setErrors(mutErr);
     };
 
-    useEffect(() => validateInput(), [credential, password]);
+    useEffect(() => validateInput(), [credential, password, validateInput]);
 
     const handleSubmit = (e) => {
         e.preventDefault();

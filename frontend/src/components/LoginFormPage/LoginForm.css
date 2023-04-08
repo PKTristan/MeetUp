@@ -4,7 +4,11 @@
     align-items: center;
     padding-left: 0;
     padding-right: 0;
-    width: 344px;
+    width: 400px;
+}
+
+.login-form {
+  width: 325px;
 }
 
 h1 {
