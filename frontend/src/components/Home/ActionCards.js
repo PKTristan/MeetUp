@@ -1,4 +1,4 @@
-
+import { NavLink } from "react-router-dom";
 
 const ActionCards = ({ paragraphs }) => {
 
@@ -7,7 +7,7 @@ const ActionCards = ({ paragraphs }) => {
         <div className="action-cards">
             <div className="card">
                 <img src="https://secure.meetupstatic.com/next/images/shared/handsUp.svg?w=256" alt='high five'></img>
-                <h3>See all groups</h3>
+                <h3><NavLink to='/groups'>See all groups</NavLink></h3>
                 <p>{paragraphs[2]}</p>
             </div>
             <div className="card">
