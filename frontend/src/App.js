@@ -8,7 +8,6 @@ import SignupFormPage from "./components/SignupFormPage";
 import Navigation from "./components/Navigation";
 import GroupDetails from "./components/GroupDetails";
 import Home from "./components/Home";
-import logo from "./assets/meetup-logo.png";
 import Modal from 'react-modal';
 import { getAllGroups, clearGroups, CLEAR_OPTIONS } from "./store/groups";
 
@@ -31,7 +30,6 @@ function App() {
 
   return (
     <>
-      <img className="corner-logo" src={logo} alt="Meetup logo" />
       <Navigation />
       <div className="app-routes">
         <Switch>

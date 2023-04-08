@@ -28,6 +28,7 @@
     line-height: 1;
     font-weight: 700;
     margin: 0;
+    text-align: left;
 }
 
 .section1 .div-left p {
@@ -48,7 +49,7 @@
 }
 
 
-.section2 {
+.get-started {
     display: block;
     padding-left: 1rem;
     padding-right: 1rem;
@@ -92,6 +93,8 @@
     font-weight: 400;
     font-size: 0.875rem;
     line-height: 1.25rem;
+    width: 66.66667%;
+    margin: 0 auto 2.5rem auto;
 }
 
 .card {
@@ -100,7 +103,7 @@
     height: 100%;
 }
 
-.section2 button {
+.section4 button {
     border-radius: 8px;
     cursor: pointer;
     color: #fff;
@@ -110,7 +113,7 @@
     border-color: #00798a;
 }
 
-.section2 button:hover {
+.section4 button:hover {
     color: #fff;
     background-color: #008fa3;
     border-color: #008fa3;
