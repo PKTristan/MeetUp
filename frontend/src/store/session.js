@@ -4,7 +4,7 @@ import { csrfFetch } from './csrf';
 //this file contains all actions specific to the session's user's
 
 //get user
-export const userSelector = (state) => state.session.user;
+export const currentUserSelector = (state) => state.session.user;
 
 const LOAD_USER = "session/LOAD_USER";
 const REMOVE_USER = "session/REMOVE_USER";

@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { groupDetailsSelector } from "../../store/groups";
+import { currentUserSelector } from "../../store/session";
 
 const GroupInfo = () => {
     const group = useSelector(groupDetailsSelector);
+    const user = useSelector(currentUserSelector);
     const [isLoaded, setIsLoaded] = useState(false);
 
     useEffect(() => {
@@ -22,6 +24,7 @@ const GroupInfo = () => {
         alert("Feature being added soon!");
     };
 
+    const isUserOrganizer = (id) => (user && id === user.id);
 
     return (
         <>
@@ -33,10 +36,13 @@ const GroupInfo = () => {
                         <div className="group-info">
                             <h2>{group.name}</h2>
                             <h4>{group.city}, {group.state}</h4>
-                            <h4>{group.numMembers} members - - - {group.type}</h4>
-                            <h4>Organized by {group.Organizer.firstName} {group.Organizer.lastName}</h4>
+                            <h4>{group.numMembers} members &#183; {(group.private) ? 'Private' : 'Public'}</h4>
+                            <h4>Organized by: {group.Organizer.firstName} {group.Organizer.lastName}</h4>
 
-                            <button className="join-group" onClick={handleJoinClick}>Join this group</button>
+                            <button className='logged-in-button' hidden={!isUserOrganizer(group.Organizer.id)} onClick={handleJoinClick}>Create event</button>
+                            <button className='logged-in-button' hidden={!isUserOrganizer(group.Organizer.id)} onClick={handleJoinClick}>Update</button>
+                            <button className='logged-in-button' hidden={!isUserOrganizer(group.Organizer.id)} onClick={handleJoinClick}>Delete</button>
+                            <button className="join-group" hidden={isUserOrganizer(group.Organizer.id)} onClick={handleJoinClick}>Join this group</button>
                         </div>
                     </div>
                     <div className="group-about">

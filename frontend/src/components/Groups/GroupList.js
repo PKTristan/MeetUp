@@ -37,7 +37,7 @@ const GroupList = () => {
                                 <h2 className="group-name">{group.name}</h2>
                                 <h3 className="group-location">{group.city + ", " + group.state}</h3>
                                 <p className="group-about">{group.about}</p>
-                                <h3 className="group-members-type"> {group.numMembers + " members - - - " + group.type}</h3>
+                                <h3 className="group-members-type"> {group.numMembers + " members"} &#183; {((group.private) ? 'Private' : 'Public')}</h3>
                             </div>
                         </div>
                     );
