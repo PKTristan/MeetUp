@@ -68,27 +68,11 @@ router.get('/:eventId', exists, async (req, res, next) => {
 
 router.use('/:eventId/attendees', exists, attendeesRouter);
 
-//add event roles
-const addEventReqRoles = async(req, res, next) => {
-    req.roles.member = {status: 'member'}
-
-    next();
-}
-
 router.use('/:eventId/attendance', requireAuthentication, exists, attendeesRouter);
 
 
 //////////////////////////////////////////////////////
 
-//add create event roles
-const addCreateRoles = async (req, res, next) => {
-    if(!req.roles) {req.roles = {groupId: req.params.groupId}};
-    req.roles.organizer = true;
-    req.roles.member = { status: 'co-host' };
-
-
-    next();
-};
 
 //validate in person or online
 const validateType = (value, { req }) => {
@@ -184,15 +168,6 @@ const validateEvent = [
     handleValidationErrors
 ];
 
-//add image to event roles
-const addImageRoles = async (req, res, next) => {
-    req.roles = {
-        attendee: ['member', 'host', 'co-host'],
-        eventId: req.params.eventId
-    }
-
-    next();
-};
 
 //validate image
 const validateImage = [
@@ -209,7 +184,7 @@ const validateImage = [
 
 
 //route to create event
-router.post('/', requireAuthentication, validateEvent, addCreateRoles, requireAuthorization,
+router.post('/', requireAuthentication, validateEvent, requireAuthorization,
     async (req, res, next) => {
         const { venueId, name, type, capacity, price, description, startDate, endDate } = req.body;
         const { groupId } = req.params;
@@ -225,7 +200,7 @@ router.post('/', requireAuthentication, validateEvent, addCreateRoles, requireAu
     });
 
 //add an image to an event based on an eventId
-router.post('/:eventId/images', requireAuthentication, exists, validateImage, addImageRoles, requireAuthorization,
+router.post('/:eventId/images', requireAuthentication, exists, validateImage, requireAuthorization,
     async (req, res, next) => {
         const { url, preview } = req.body;
         const { eventId } = req.params;
@@ -242,7 +217,7 @@ router.post('/:eventId/images', requireAuthentication, exists, validateImage, ad
 
 
 //edit an event specified by its id
-router.put('/:eventId', requireAuthentication, exists, validateEvent, addCreateRoles, requireAuthorization,
+router.put('/:eventId', requireAuthentication, exists, validateEvent, /*requireAuthorization,*/
     async (req, res, next) => {
         const { eventId } = req.params;
         const { groupId, venueId, name, type, capacity, price, description, startDate, endDate } = req.body;
@@ -259,7 +234,7 @@ router.put('/:eventId', requireAuthentication, exists, validateEvent, addCreateR
     });
 
 //delete an event by its id
-router.delete('/:eventId', requireAuthentication, exists, addCreateRoles, requireAuthorization,
+router.delete('/:eventId', requireAuthentication, exists, requireAuthorization,
     async (req, res, next) => {
         const { eventId } = req.params;
 

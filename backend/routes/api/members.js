@@ -76,37 +76,9 @@ router.post('/', async (req, res, next) => {
     }
 });
 
-// add auth roles
-const addStatusRoles = async (req, res, next) => {
-    const { memberId, status } = req.body;
-    const member = await Membership.findByPk(memberId);
-
-    if (status === 'member') {
-        req.roles = {
-            organizer: true,
-            member: {
-                status: 'co-host'
-            },
-            groupId: member.groupId
-        }
-        next();
-    }
-    else if (status === 'co-host') {
-        req.roles = {
-            organizer: true,
-            groupId: member.groupId
-        }
-        next();
-    }
-    else {
-        const err = new Error('not a valid status');
-
-        next(err);
-    }
-}
 
 //change memberhsip stsatus
-router.put('/', addStatusRoles, requireAuthorization, async (req, res, next) => {
+router.put('/', requireAuthorization, async (req, res, next) => {
     const { memberId, status } = req.body;
     const id = memberId;
 
@@ -120,45 +92,10 @@ router.put('/', addStatusRoles, requireAuthorization, async (req, res, next) => 
     }
 });
 
-//add roles for deleting
-const addDeleteRoles = async (req, res, next) => {
-    const { groupId } = req.params;
-    const {memberId} = req.body;
-    const userId = req.user.id;
 
+//delete member
 
-    try {
-        const member = await Membership.findByPk(memberId);
-        if(!member) {
-            const err = new Error('No such Membership Exists');
-            err.status = 404;
-            throw err;
-        }
-
-        if (member.groupId === groupId && member.userId === userId) {
-            req.roles = {
-                organizer: true,
-                member: {
-                    status: 'member'
-                },
-                groupId
-            }
-            next();
-        }
-    }
-    catch (err) {
-        next(err);
-    }
-
-    req.roles = {
-        organizer: true,
-        groupId
-    }
-    next();
-
-};
-
-router.delete('/', addDeleteRoles, requireAuthorization, async(req, res, next) => {
+router.delete('/', requireAuthorization, async(req, res, next) => {
     const {memberId} = req.body;
     try {
         const del = await Membership.deleteMember({id: memberId});

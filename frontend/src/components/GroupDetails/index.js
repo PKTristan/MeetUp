@@ -5,6 +5,7 @@ import {  useDispatch } from "react-redux";
 import  { useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import GroupInfo from "./GroupInfo";
+import EventList from "../Events/EventList";
 
 
 const GroupDetails = () => {
@@ -20,6 +21,7 @@ const GroupDetails = () => {
         <div className="group-details">
             <p>{"< "} <NavLink to="/groups">Groups</NavLink></p>
             <GroupInfo />
+            <EventList groupId={{id}}/>
         </div>
     )
 }

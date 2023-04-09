@@ -9,7 +9,8 @@ import Navigation from "./components/Navigation";
 import GroupDetails from "./components/GroupDetails";
 import Home from "./components/Home";
 import Modal from 'react-modal';
-import { getAllGroups, clearGroups, CLEAR_OPTIONS } from "./store/groups";
+import { getAllGroups, clearGroups, CLEAR_OPTIONS_GROUPS } from "./store/groups";
+import { clearEvents, getEvents, CLEAR_OPTIONS_EVENTS } from "./store/events";
 
 
 Modal.setAppElement('#root');
@@ -21,9 +22,11 @@ function App() {
   useEffect(() => {
     dispatch(currentUser());
     dispatch(getAllGroups());
+    dispatch(getEvents());
 
     return () => {
-      dispatch(clearGroups([CLEAR_OPTIONS.all]));
+      dispatch(clearGroups([CLEAR_OPTIONS_GROUPS.all]));
+      dispatch(clearEvents([CLEAR_OPTIONS_EVENTS.all]));
     };
   }, [dispatch]);
 

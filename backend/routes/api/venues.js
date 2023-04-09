@@ -82,16 +82,9 @@ router.post('/', validateVenue, async (req, res, next) => {
     }
 });
 
-//adding required roles for editing venues
-const addEditRoles = async (req, res, next) => {
-    req.roles.organizer = true;
-    req.roles.member = {status: 'co-host'};
-
-    next();
-};
 
 //edit a venue by its id
-router.put('/:venueId', requireAuthentication, exists, validateVenue, addEditRoles, requireAuthorization,
+router.put('/:venueId', requireAuthentication, exists, validateVenue, requireAuthorization,
     async( req, res, next) => {
         const {venueId} = req.params;
         const { address, city, state, lat:latitude, lng:longitude } = req.body;
