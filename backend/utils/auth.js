@@ -183,7 +183,7 @@ const findPermissions = (reqUrl, req, url = '', id = {}) => {
 const populateData = async (user, id) => {
     if (id.groups !== undefined) {
         const group = await Group.findByPk(id.groups);
-        const membership = await Membership.findOne({
+        const status= await Membership.findOne({
             where: {
                 groupId: id.groups,
                 userId: user.id
@@ -193,12 +193,12 @@ const populateData = async (user, id) => {
 
 
         authGroup = group;
-        if (membership) authStatus = membership.status;
+        if (membership) authStatus = status;
     }
     else if (id.events !== undefined) {
         const event = await Event.findByPk(id.events);
         const group = await Group.findByPk(event.groupId);
-        const membership = await Membership.findOne({
+        const memStatus= await Membership.findOne({
             where: {
                 groupId: group.id,
                 userId: user.id
@@ -206,7 +206,7 @@ const populateData = async (user, id) => {
             attributes: ['status']
         });
 
-        const attendance = await Attendance.findOne({
+        const attStatus= await Attendance.findOne({
             where: {
                 eventId: id.events,
                 userId: user.id
@@ -215,8 +215,8 @@ const populateData = async (user, id) => {
         });
 
         authGroup = group;
-        if (membership) authStatus = membership.status;
-        if (attendance) authStatus = attendance.status;
+        if (membership) authStatus = memStatus;
+        if (attendance) authStatus = attStatus;
     }
 };
 
