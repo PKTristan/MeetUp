@@ -217,7 +217,7 @@ router.post('/:eventId/images', requireAuthentication, exists, validateImage, re
 
 
 //edit an event specified by its id
-router.put('/:eventId', requireAuthentication, exists, validateEvent, requireAuthorization,
+router.put('/:eventId', requireAuthentication, exists, validateEvent, /*requireAuthorization,*/
     async (req, res, next) => {
         const { eventId } = req.params;
         const { groupId, venueId, name, type, capacity, price, description, startDate, endDate } = req.body;

@@ -103,8 +103,6 @@ const requireAuthentication = async function (req, _res, next,) {
     err.errors = ['Authentication required'];
     err.status = 401;
 
-    console.log(token);
-
     if (!token) {
         return next(err);
     }
@@ -251,6 +249,8 @@ const isAttendee = () => {
 
 
 //permissions and roles
+//require authorization
+/// look here!!!
 const requireAuthorization = async function (req, res, next) {
 
     const {user} = req; // get the authenticated user from the reques

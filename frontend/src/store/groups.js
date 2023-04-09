@@ -2,10 +2,10 @@
 import { csrfFetch } from "./csrf";
 import normalizeData from "./normalizeData";
 
-export const CLEAR_OPTIONS = {
+export const CLEAR_OPTIONS_GROUPS = {
     all: 'allGroups',
     details: 'groupDetails'
-}
+};
 
 const LOAD_GROUPS = 'groups/LOAD_GROUPS';
 const LOAD_GROUP_DETAILS = 'groups/LOAD_GROUP_DETAILS';
