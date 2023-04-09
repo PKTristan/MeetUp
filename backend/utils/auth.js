@@ -193,7 +193,7 @@ const populateData = async (user, id) => {
 
 
         authGroup = group;
-        if (memStatus) authStatus = status;
+        if (status) authStatus = status;
     }
     else if (id.events !== undefined) {
         const event = await Event.findByPk(id.events);
