@@ -193,7 +193,7 @@ const populateData = async (user, id) => {
 
 
         authGroup = group;
-        if (membership) authStatus = status;
+        if (status) authStatus = status;
     }
     else if (id.events !== undefined) {
         const event = await Event.findByPk(id.events);
@@ -215,8 +215,8 @@ const populateData = async (user, id) => {
         });
 
         authGroup = group;
-        if (membership) authStatus = memStatus;
-        if (attendance) authStatus = attStatus;
+        if (memStatus) authStatus = memStatus;
+        if (attStatus) authStatus = attStatus;
     }
 };
 
