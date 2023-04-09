@@ -62,7 +62,7 @@ router.get('/', isHost, async(req, res, next) => {
 
 
 //request attendance
-router.post('/', async(req, res, next) => {
+router.post('/', requireAuthentication, requireAuthorization, async(req, res, next) => {
     const userId = req.user.id;;
     const {eventId} = req.params;
     const status = 'pending';
@@ -77,41 +77,10 @@ router.post('/', async(req, res, next) => {
     }
 });
 
-// add auth roles
-const addStatusRoles = async (req, res, next) => {
-    const { userId, status } = req.body;
-    const {eventId} = req.params;
-    const event = await Event.findByPk(eventId);
-    console.log(req.roles)
-
-
-    if (status === 'member') {
-        req.roles = {
-            organizer: true,
-            member: {
-                status: 'co-host'
-            },
-            groupId: event.groupId
-        }
-        next();
-    }
-    else if (status === 'co-host') {
-        req.roles = {
-            organizer: true,
-            groupId: event.groupId
-        }
-        next();
-    }
-    else {
-        const err = new Error('not a valid status');
-
-        next(err);
-    }
-}
 
 
 //update attendance
-router.put('/', addStatusRoles, requireAuthorization, async(req, res, next) => {
+router.put('/', requireAuthorization, async(req, res, next) => {
     const {userId, status} = req.body;
     const {eventId} = req.params;
 

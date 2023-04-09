@@ -146,18 +146,8 @@ router.get('/:groupId', async (req, res, next) => {
     }
 });
 
-//add roles for image adding
-const addImageRoles = async (req, res, next) => {
-    req.roles = {
-        organizer: true,
-        groupId: req.params.groupId
-    }
-
-    next();
-}
-
 //add image to group based on group id
-router.post('/:groupId/images', requireAuthentication, exists, addImageRoles, requireAuthorization, async (req, res, next) => {
+router.post('/:groupId/images', requireAuthentication, exists, requireAuthorization, async (req, res, next) => {
     const { groupId } = req.params;
     const { preview, url } = req.body;
 
@@ -172,21 +162,10 @@ router.post('/:groupId/images', requireAuthentication, exists, addImageRoles, re
 });
 
 //add venue roles
-//add roles for editing
-const addVenueRoles = async (req, res, next) => {
-    req.roles = {
-        organizer: true,
-        member: {
-            status: 'co-host'
-        },
-        groupId: req.params.groupId
-    }
 
-    next();
-};
 
 //get venues for group by groupID router
-router.use('/:groupId/venues', requireAuthentication, exists, addVenueRoles, requireAuthorization, venuesRouter);
+router.use('/:groupId/venues', requireAuthentication, exists, requireAuthorization, venuesRouter);
 
 //route to events
 router.use('/:groupId/events', exists, eventsRouter);
@@ -250,19 +229,9 @@ router.post('/', validateGroup, requireAuthentication, async (req, res, next) =>
     }
 });
 
-//add roles for editing
-const addEditRoles = async (req, res, next) => {
-    req.roles = {
-        organizer: true,
-        groupId: req.params.groupId
-    }
-
-    next();
-};
-
 
 //edit a group
-router.put('/:groupId', validateGroup, requireAuthentication, exists, addEditRoles, requireAuthorization,
+router.put('/:groupId', validateGroup, requireAuthentication, exists, requireAuthorization,
     async (req, res, next) => {
         const { name, about, type, private, city, state } = req.body;
         const temp = { name, about, type, private, city, state };
@@ -290,18 +259,9 @@ router.put('/:groupId', validateGroup, requireAuthentication, exists, addEditRol
         }
     });
 
-//add roles for deleting
-const addDeleteRoles = async (req, res, next) => {
-    req.roles = {
-        organizer: true,
-        groupId: req.params.groupId
-    }
-
-    next();
-};
 
 //delete a group
-router.delete('/:groupId', requireAuthentication, exists, addDeleteRoles, requireAuthorization,
+router.delete('/:groupId', requireAuthentication, exists, requireAuthorization,
     async (req, res, next) => {
         const { groupId } = req.params;
 

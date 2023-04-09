@@ -1,5 +1,6 @@
 // backend/routes/index.js
 const express = require('express');
+const { requireAuthorization } = require('../utils/auth');
 const router = express.Router();
 const apiRouter = require('./api');
 
@@ -33,9 +34,19 @@ if (process.env.NODE_ENV === 'production') {
 // Add a XSRF-TOKEN cookie in development
 if (process.env.NODE_ENV !== 'production') {
     router.get('/api/csrf/restore', (req, res) => {
-        res.cookie('XSRF-TOKEN', req.csrfToken());
-        return res.json({});
+        const csrfToken = req.csrfToken();
+        res.cookie("XSRF-TOKEN", csrfToken);
+        res.status(200).json({
+            'XSRF-Token': csrfToken
+        });
     });
+
+    router.get('/api/test', requireAuthorization, (req, res)=> {
+        return res.json({
+            test:'this is a test check console',
+            'url': req.originalUrl
+        });
+    })
 }
 
 // Add an XSRF-TOKEN cookie

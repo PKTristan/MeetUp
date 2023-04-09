@@ -3,7 +3,45 @@
 const jwt = require('jsonwebtoken');
 
 const { jwtConfig } = require('../config');
-const { User, Group, Membership, Attendance } = require('../db/models');
+const { User, Group, Membership, Attendance, Event } = require('../db/models');
+
+let authGroup = null;
+let authStatus = null;
+let authAttendee = null;
+
+
+const ORGANIZER = "ORGANIZER";
+const HOST = "HOST";
+const CO_HOST = "CO_HOST";
+const MEMBER = "MEMBER";
+const ID_MATCH = 'ID_MATCH';
+const ATTENDEE = "ATTENDEE";
+
+const addGroupImg = '/api/groups/:id/images';
+const editDelGroup = '/api/groups/:id';
+const getCreateVenues = '/api/groups/:id/venues';
+const createEvent = '/api/groups/:id/events';
+const addEventImg = '/api/events/:id/images';
+const editDelEvent = '/api/events/:id';
+const changeDelMembership = '/api/groups/:id/membership';
+const attendanceChangeDelReq = '/api/events/:id/attendance';
+const delGroupImg = '/api/group-images/:id';
+const delEventImg = '/api/event-images/:id';
+const editVenue = ' /api/venues/:venueId';
+
+const PERMISSIONS = {
+    [addGroupImg]: [ORGANIZER, HOST],
+    [editDelGroup]: [ORGANIZER, HOST],
+    [getCreateVenues]: [ORGANIZER, HOST, CO_HOST],
+    [createEvent]: [ORGANIZER, HOST, CO_HOST],
+    [addEventImg]: [ATTENDEE, ORGANIZER, CO_HOST],
+    [editDelEvent]: [ORGANIZER, CO_HOST, HOST],
+    [changeDelMembership]: [[[ORGANIZER, HOST, CO_HOST], [ORGANIZER, HOST]], [ORGANIZER, HOST, ID_MATCH]],
+    [attendanceChangeDelReq]: [[ORGANIZER, HOST, CO_HOST], [ORGANIZER, HOST, ID_MATCH], [MEMBER]],
+    [delGroupImg]: [ORGANIZER, HOST, CO_HOST],
+    [delEventImg]: [ORGANIZER, HOST, CO_HOST],
+    [editVenue]: [ORGANIZER, HOST, CO_HOST],
+};
 
 const { secret, expiresIn } = jwtConfig;
 
@@ -90,73 +128,175 @@ const requireAuthentication = async function (req, _res, next,) {
     }
 };
 
+const findPermissions = (reqUrl, req, url = '', id = {}) => {
+    const [curr, ...next] = reqUrl;
+
+    if (next.length === 0) {
+
+        let isChangeDelMembership = changeDelMembership === url;
+        let permissions = PERMISSIONS[url];
+
+        if ((isChangeDelMembership) || (attendanceChangeDelReq === url)) {
+
+            //check if we are updating/ changing something
+            if (req.method === 'PUT') {
+
+                //check if we are dealing with memberships or attendance
+                if (isChangeDelMembership) {
+
+                    if (req.body.status === 'member') {
+                        //we are changing a membership to a group to a member
+                        permissions = permissions[0][0];
+                    }
+                    else {
+                        //changing a membership to group to co-host
+                        permissions = permissions[0][1];
+                    }
+                }
+                else {
+                    //changing a member from pending to attending an event
+                    permissions = permissions[0];
+                }
+            } else if (req.method === 'DELETE') {
+                permissions = permissions[1];
+            } else if (req.method === 'POST') {
+                //requesting attendance
+                permissions = permissions[2];
+            }
+
+        }
+
+
+        return { permissions, url, id };
+    }
+
+    if (/\d/.test(next[0])) {
+        id[curr] = parseInt(next[0]);
+
+        return findPermissions(next, req, url + '/:id', id);
+    }
+    else {
+        return findPermissions(next, req, url + `/${next[0]}`, id);
+    }
+};
+
+
+//populate the data for use in checking functions
+const populateData = async (user, id) => {
+    if (id.groups !== undefined) {
+        const group = await Group.findByPk(id.groups);
+        const membership = await Membership.findOne({
+            where: {
+                groupId: id.groups,
+                userId: user.id
+            },
+            attributes: ['status']
+        });
+
+
+        authGroup = group;
+        if (membership) authStatus = membership.status;
+    }
+    else if (id.events !== undefined) {
+        const event = await Event.findByPk(id.events);
+        const group = await Group.findByPk(event.groupId);
+        const membership = await Membership.findOne({
+            where: {
+                groupId: group.id,
+                userId: user.id
+            },
+            attributes: ['status']
+        });
+
+        const attendance = await Attendance.findOne({
+            where: {
+                eventId: id.events,
+                userId: user.id
+            },
+            attributes: ['status']
+        });
+
+        authGroup = group;
+        if (membership) authStatus = membership.status;
+        if (attendance) authStatus = attendance.status;
+    }
+};
+
+
+//functions to check for roles
+const isOrganizer = (userId) => {
+    return authGroup && (authGroup.organizerId === userId);
+};
+
+const isHost = () => {
+    return authStatus && (authStatus === 'host');
+};
+
+const isCoHost = () => {
+    return authStatus && (authStatus === 'co-host');
+};
+
+const isMember = () => {
+    return authStatus && (authStatus === 'member');
+};
+
+const doesIdMatch = (userId, { groups, events }) => {
+    return (groups !== undefined) ? (userId === groups) : (userId === events);
+};
+
+const isAttendee = () => {
+    return authAttendee && (authAttendee === 'member');
+}
+
+
+
 //permissions and roles
 const requireAuthorization = async function (req, res, next) {
 
-    const user = req.user; // get the authenticated user from the reques
-    let hasRequiredRoles = true;
-    let isOrganizer = false;
-    let isMember = false;
-    let isAttendee = false;
-    const { organizer, member, attendee, groupId, eventId } = req.roles;
-    console.log(organizer)
+    const {user} = req; // get the authenticated user from the reques
+    const reqUrl = req.originalUrl.split('/');
+    let hasRequiredRoles = false;
 
-    if (organizer) {
-        const group = await Group.findByPk(groupId);
-        const {organizerId} = group;
-        isOrganizer = (organizerId === user.id);
+    const {permissions, url, id} = findPermissions(reqUrl, req);
 
-        // if (!isOrganizer) {
-        //     hasRequiredRoles = false;
-        // };
+    await populateData(user, id);
 
-    }
+    //for every permission or until we get a true, check these roles
+    let i = 0;
 
-    if (member && !isOrganizer) {
-        // hasRequiredRoles = true;
-        const membership = await Membership.findOne({
-            where: {
-                userId: user.id,
-                groupId: groupId
-            },
-            attributes: ['status']
-        });
+    while ((!hasRequiredRoles) && (i < permissions.length)) {
+        switch(permissions[i]) {
+            case ORGANIZER:
+                hasRequiredRoles = isOrganizer(user.id);
+                break;
 
-        isMember = (membership.status === member.status);
+            case HOST:
+                hasRequiredRoles = isHost();
+                break;
 
-        // if (!membership || !isMember) {
-        //     hasRequiredRoles = false;
-        // }
-    }
+            case CO_HOST:
+                hasRequiredRoles = isCoHost();
+                break;
 
-    if (attendee && !isOrganizer && !isMember) {
-        // hasRequiredRoles = true;
-        const attendance = await Attendance.findOne({
-            where: {
-                userId: user.id,
-                eventId: eventId
-            },
-            attributes: ['status']
-        });
+            case MEMBER:
+                hasRequiredRoles = isMember();
+                break;
 
-        const isUnauth = () => {
-            let status = true;
+            case ID_MATCH:
+                hasRequiredRoles = doesIdMatch(user.id, id);
+                break;
 
-            for (let stat in attendee) {
-                if (!attendance || attendance.status === stat) {
-                    status = false;
-                }
-            }
+            case ATTENDEE:
+                hasRequiredRoles = isAttendee();
+                break;
 
-            return status;
-        };
-
-        if (!isUnauth()) {
-            isAttendee = true;
+            default:
+                break;
         }
+
+        i++;
     }
 
-    hasRequiredRoles = isOrganizer || isMember || isAttendee;
 
     // If the user has the required roles and permissions, allow them to access the endpoint
     if (hasRequiredRoles) {
