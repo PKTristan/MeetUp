@@ -24,7 +24,6 @@ module.exports = (sequelize, DataTypes) => {
     //gets the details of a group by id
     static async getById(id) {
       try {
-        // console.log(`SQL query: ${Group.findByPk.toString()}`);
 
         const group = await Group.findByPk(id, {
           attributes: {
@@ -63,7 +62,7 @@ module.exports = (sequelize, DataTypes) => {
           throw new Error(`Group not found.`);
         }
 
-        // console.log(group)
+
         return group;
       }
       catch (e) {
@@ -82,7 +81,6 @@ module.exports = (sequelize, DataTypes) => {
 
         const group = await Group.findByPk(groupId);
 
-        console.log(group);
         return group;
       }
       catch (err) {

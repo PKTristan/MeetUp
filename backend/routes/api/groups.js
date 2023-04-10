@@ -131,7 +131,7 @@ router.get('/:groupId', async (req, res, next) => {
     try {
         const group = await Group.getById(groupId);
 
-         //console.log(group)
+
         return res.json(group);
     }
     catch (error) {
@@ -239,7 +239,6 @@ router.put('/:groupId', validateGroup, requireAuthentication, exists, requireAut
 
         for (const prop in temp) {
             if (temp[prop]) {
-                console.log(`${prop}: ${temp[prop]}`);
                 editObj[prop] = temp[prop];
             }
         }

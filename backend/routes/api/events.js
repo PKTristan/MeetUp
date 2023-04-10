@@ -24,11 +24,6 @@ const exists = async (req, res, next) => {
             throw err;
         }
 
-
-        req.roles = { groupId: event.groupId};
-
-        console.log(req.roles)
-
         next();
     }
     catch (err) {
@@ -40,7 +35,6 @@ const exists = async (req, res, next) => {
 router.get('/', async (req, res, next) => {
     const { groupId } = req.params;
     const whereObj = (groupId) ? { groupId } : {};
-    console.log(whereObj);
 
     try {
         const events = await Event.getEventsBy(whereObj);
@@ -112,8 +106,6 @@ const isInFuture = (value) => {
 const venueExists = async (value) => {
     const venue = await Venue.findByPk(value);
 
-    console.log(venue);
-
     return !!venue;
 };
 
@@ -125,7 +117,7 @@ const validateEvent = [
 
 
             const venue = await Venue.findByPk(value);
-            console.log(venue)
+
             if (!venue) {
                 const err = new Error('Venue does not Exist');
                 err.status = 404;
