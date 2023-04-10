@@ -28,7 +28,7 @@ export const clearGroups = (options = []) => ({
 export const loadGroupDetails = (group) => ({
     type: LOAD_GROUP_DETAILS,
     group
-})
+});
 
 
 
@@ -44,7 +44,7 @@ export const getAllGroups = () => async (dispatch) => {
     }
 
     return response;
-}
+};
 
 
 //thunk action creator to fetch the /api/groups/:id api
@@ -57,6 +57,18 @@ export const getGroupDetails = (id) => async (dispatch) => {
     }
 
     return response;
+};
+
+export const createGroup = (group) => async (dispatch) => {
+    const response = await csrfFetch('/api/groups', {
+        method: 'POST',
+        body: JSON.stringify(group)
+    });
+
+    if (response.ok) {
+        const data = await response.json();
+        dispatch(getGroupDetails(data.group.id));
+    }
 }
 
 
