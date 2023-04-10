@@ -14,6 +14,7 @@ module.exports = (sequelize, DataTypes) => {
     static async addGroup(groupObj) {
       try {
         const group = await Group.create(groupObj);
+
         return group;
       }
       catch (e) {

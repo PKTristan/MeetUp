@@ -9,7 +9,7 @@ if (process.env.NODE_ENV === 'production') {
 const { requireAuthentication, requireAuthorization } = require('../../utils/auth');
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
-const { Group, User, GroupImage } = require('../../db/models');
+const { Group, User, GroupImage, Membership } = require('../../db/models');
 const { Sequelize, Op } = require('sequelize');
 const venuesRouter = require('./venues.js');
 const eventsRouter = require('./events.js');
@@ -222,7 +222,9 @@ router.post('/', validateGroup, requireAuthentication, async (req, res, next) =>
 
         const group = await Group.addGroup({ organizerId, name, about, type, private, city, state });
 
-        return res.status(201).json({ group });
+        const member = await Membership.requestMembership({ userId: organizerId, groupId: group.id, status: 'host' });
+
+        return res.status(201).json({ group, member });
     }
     catch (errors) {
         next(errors);
