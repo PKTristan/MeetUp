@@ -28,7 +28,6 @@ const exists = async (req, res, next) => {
 //get all venues specified by groupId or venueId
 router.get('/', async (req, res, next) => {
     const groupId = req.roles.groupId;
-    console.log(groupId);
 
     if (groupId) {
         try {
