@@ -9,6 +9,7 @@ import Navigation from "./components/Navigation";
 import GroupDetails from "./components/GroupDetails";
 import Home from "./components/Home";
 import Modal from 'react-modal';
+import Events from "./components/Events";
 import { getAllGroups, clearGroups, CLEAR_OPTIONS_GROUPS } from "./store/groups";
 import { clearEvents, getEvents, CLEAR_OPTIONS_EVENTS } from "./store/events";
 
@@ -41,6 +42,7 @@ function App() {
           <Route exact path="/signup" component={SignupFormPage} />
           <Route exact path="/groups" component={Groups} />
           <Route exact path="/groups/:id" component={GroupDetails} />
+          <Route exact path="/events" component={Events} />
         </Switch>
       </div>
     </>
