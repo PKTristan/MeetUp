@@ -48,10 +48,9 @@ const ProfileList = ({ args: { dropdown, setDropdown }}) => {
                     <li>
                         <button type='button' onClick={handleHome}>Home</button>
                     </li>
-                    <li>
+                    <li className="prof-list-buttons">
                         <InterimModal Component={LoginFormPage} buttonLabel="Login" />
-                    </li>
-                    <li>
+
                         <InterimModal Component={SignupFormPage} buttonLabel="Signup" />
                     </li>
                 </ul>
@@ -62,13 +61,11 @@ const ProfileList = ({ args: { dropdown, setDropdown }}) => {
         return (
             <div className="profile-list">
                 <ul className={ulClassName} ref={ref} >
-                    <li>{user.username}</li>
+                    <li>Hello, {user.username}</li>
                     <li>{user.firstName} {user.lastName}</li>
                     <li>{user.email}</li>
-                    <li>
+                    <li className="prof-list-buttons">
                         <button type='button' onClick={handleHome}>Home</button>
-                    </li>
-                    <li>
                         <button type='button' onClick={handleLogout}>Log Out</button>
                     </li>
 

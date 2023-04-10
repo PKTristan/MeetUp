@@ -23,6 +23,7 @@ body {
     height: 34px;
     position: absolute;
     left: 40px;
+    top: 30px;
 }
 
 button {
@@ -37,4 +38,8 @@ button:hover {
 
 ul .error  {
     color: red;
+}
+
+ul {
+    list-style: none;
 }
