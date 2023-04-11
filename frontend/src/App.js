@@ -7,6 +7,7 @@ import { useDispatch } from "react-redux";
 import SignupFormPage from "./components/SignupFormPage";
 import Navigation from "./components/Navigation";
 import GroupDetails from "./components/GroupDetails";
+import NewGroup from "./components/NewGroup";
 import Home from "./components/Home";
 import Modal from 'react-modal';
 import Events from "./components/Events";
@@ -41,6 +42,7 @@ function App() {
           <Route exact path="/login" component={LoginFormPage} />
           <Route exact path="/signup" component={SignupFormPage} />
           <Route exact path="/groups" component={Groups} />
+          <Route exact path="/groups/new" component={NewGroup} />
           <Route exact path="/groups/:id" component={GroupDetails} />
           <Route exact path="/events" component={Events} />
         </Switch>

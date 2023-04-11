@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { groupDetailsSelector } from "../../store/groups";
 import { currentUserSelector } from "../../store/session";
+import Delete from "../Delete";
+import InterimModal from "../Modal";
 
 const GroupInfo = () => {
     const group = useSelector(groupDetailsSelector);
@@ -41,7 +43,7 @@ const GroupInfo = () => {
 
                             <button className='logged-in-button' hidden={!isUserOrganizer(group.Organizer.id)} onClick={handleJoinClick}>Create event</button>
                             <button className='logged-in-button' hidden={!isUserOrganizer(group.Organizer.id)} onClick={handleJoinClick}>Update</button>
-                            <button className='logged-in-button' hidden={!isUserOrganizer(group.Organizer.id)} onClick={handleJoinClick}>Delete</button>
+                            <InterimModal Component={Delete} buttonLabel="Delete" buttonClass='logged-in-button' isHidden={!isUserOrganizer(group.Organizer.id)} params={{itemName: "group"}} />
                             <button className="join-group" hidden={isUserOrganizer(group.Organizer.id)} onClick={handleJoinClick}>Join this group</button>
                         </div>
                     </div>
