@@ -112,8 +112,11 @@ export const deleteGroup = (id) => async (dispatch) => {
     });
 
     if (response.ok) {
-        dispatch(deleteOneGroup(id));
+        // dispatch(deleteOneGroup(id));
+        dispatch(getAllGroups());
     }
+
+    return response;
 }
 
 
@@ -151,10 +154,10 @@ const groupsReducer = (state = initialState, action) => {
         case NEW_ID:
             return {...mutState, newId: action.id};
 
-        case DELETE_GROUP:
-            mutState.allGroups = mutState.allGroups.filter(group => group.id !== action.id);
+        // case DELETE_GROUP:
+        //     delete mutState.allGroups[action.id];
 
-            return {...mutState};
+        //     return {...mutState};
 
         default:
             return state;

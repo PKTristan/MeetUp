@@ -176,7 +176,7 @@ const GroupForm = ({ groupDetails }) => {
                     <textarea
                         name="description"
                         id="description"
-                        placeholder="Please write at least 30 characters"
+                        placeholder="Please write at least 50 characters"
                         value={description}
                         onChange={onChange}
                     />

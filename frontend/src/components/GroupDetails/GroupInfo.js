@@ -43,7 +43,7 @@ const GroupInfo = () => {
 
                             <button className='logged-in-button' hidden={!isUserOrganizer(group.Organizer.id)} onClick={handleJoinClick}>Create event</button>
                             <button className='logged-in-button' hidden={!isUserOrganizer(group.Organizer.id)} onClick={handleJoinClick}>Update</button>
-                            <InterimModal Component={Delete} buttonLabel="Delete" buttonClass='logged-in-button' isHidden={!isUserOrganizer(group.Organizer.id)} params={{itemName: "group"}} />
+                            <InterimModal Component={Delete} buttonLabel="Delete" buttonClass='logged-in-button' isHidden={!isUserOrganizer(group.Organizer.id)} params={{itemName: "group", id: group.id}} />
                             <button className="join-group" hidden={isUserOrganizer(group.Organizer.id)} onClick={handleJoinClick}>Join this group</button>
                         </div>
                     </div>

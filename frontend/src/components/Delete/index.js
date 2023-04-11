@@ -1,11 +1,29 @@
 // /frontend/src/components/Delete/index.js
 
 import { useDispatch } from "react-redux";
+import { deleteGroup } from "../../store/groups";
+import { useHistory } from "react-router-dom";
+import { useState } from "react";
 
-const Delete = ({params: {itemName}, setIsOpen}) => {
+const Delete = ({params: {itemName, id}, setIsOpen}) => {
+    const dispatch = useDispatch();
+    const history = useHistory();
+    const [errors, setErrors] = useState([]);
 
     const handleYes = (e) => {
         e.preventDefault();
+
+        dispatch(deleteGroup(id)).catch(async (res) => {
+            const data = await res.json();
+            if (data && data.errors) {
+                const err = Object.values(data.errors);
+                setErrors(err);
+            }
+        });
+
+        if (errors.length === 0) {
+            history.push('/groups');
+        }
     };
 
     const handleNo = (e) => {
