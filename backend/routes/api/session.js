@@ -52,7 +52,7 @@ router.delete('/', (_req, res) => {
 });
 
 //restore session user
-router.get('/', requireAuthentication, (req, res) => {
+router.get('/', restoreUser, (req, res) => {
     const { user } = req;
 
     //return current user

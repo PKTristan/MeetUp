@@ -6,6 +6,7 @@ import  { useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import GroupInfo from "./GroupInfo";
 import EventList from "../Events/EventList";
+import { clearGroups, CLEAR_OPTIONS_GROUPS } from "../../store/groups";
 
 
 const GroupDetails = () => {
@@ -14,6 +15,8 @@ const GroupDetails = () => {
 
     useEffect(() => {
         dispatch(getGroupDetails(id));
+
+        return () => dispatch(clearGroups([CLEAR_OPTIONS_GROUPS.details]));
     }, [id, dispatch]);
 
 

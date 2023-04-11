@@ -6,7 +6,7 @@ import { currentUserSelector, login} from "../../store/session";
 import './LoginForm.css';
 
 
-const LoginFormPage = ({ setModal }) => {
+const LoginFormPage = () => {
     const dispatch = useDispatch();
     const history = useHistory();
     const user = useSelector(currentUserSelector);

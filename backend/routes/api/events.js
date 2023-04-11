@@ -4,7 +4,7 @@ const express = require('express');
 const { requireAuthentication, requireAuthorization } = require('../../utils/auth');
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
-const { Event, EventImage, Venue } = require('../../db/models');
+const { Event, EventImage, Venue, Attendance } = require('../../db/models');
 const { Sequelize } = require('sequelize');
 const attendeesRouter = require('./attendees.js');
 
@@ -184,7 +184,9 @@ router.post('/', requireAuthentication, validateEvent, requireAuthorization,
         try {
             const event = await Event.createEvent({ groupId, venueId, name, type, capacity, price, description, startDate, endDate });
 
-            return res.json(event);
+            const attendee = await Attendance.requestAttendance({ userId: req.user.id, eventId: event.id, status: 'host' });
+
+            return res.json({event, attendee});
         }
         catch (e) {
             next(e);

@@ -24,6 +24,7 @@ const GroupList = () => {
         history.push(`/groups/${id}`);
     }
 
+
     return (
         <div className="group-list" >
             {

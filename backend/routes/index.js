@@ -41,7 +41,7 @@ if (process.env.NODE_ENV !== 'production') {
         });
     });
 
-    router.get('/api/test', requireAuthorization, (req, res)=> {
+    router.get('/api/test', (req, res)=> {
         return res.json({
             test:'this is a test check console',
             'url': req.originalUrl
