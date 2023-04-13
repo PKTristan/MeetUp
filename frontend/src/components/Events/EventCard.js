@@ -1,20 +1,28 @@
 // /frontend/src/components/Events/EventCard.js
 import { useState, useEffect } from "react";
+import { useHistory } from "react-router-dom";
+
 
 const EventCard = ({ event }) => {
-const [date, setDate] = useState('');
-const [time, setTime] = useState('');
+    const history = useHistory();
+    const [date, setDate] = useState('');
+    const [time, setTime] = useState('');
 
-useEffect(() => {
-    const dateArr = event.startDate.split(/T|\./);
+    useEffect(() => {
+        const dateArr = event.startDate.split(/T|\./);
 
-    setDate(dateArr[0]);
-    setTime(dateArr[1]);
-}, [event]);
+        setDate(dateArr[0]);
+        setTime(dateArr[1]);
+    }, [event]);
 
+    const handleClick = (id) => (e) => {
+        e.preventDefault();
+
+        history.push(`/events/${id}`);
+    };
 
     return (
-        <div className="event-card">
+        <div className="event-card" onClick={handleClick(event.id)}>
             <div className="event-card-top">
                 <img src={event.previewImage} alt={event.name} />
                 <div className="event-card-info">

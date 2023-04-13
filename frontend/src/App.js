@@ -13,6 +13,8 @@ import Modal from 'react-modal';
 import Events from "./components/Events";
 import { getAllGroups, clearGroups, CLEAR_OPTIONS_GROUPS } from "./store/groups";
 import { clearEvents, getEvents, CLEAR_OPTIONS_EVENTS } from "./store/events";
+import EditGroup from "./components/EditGroup";
+import EventDetails from "./components/EventDetails";
 
 
 Modal.setAppElement('#root');
@@ -44,7 +46,9 @@ function App() {
           <Route exact path="/groups" component={Groups} />
           <Route exact path="/groups/new" component={NewGroup} />
           <Route exact path="/groups/:id" component={GroupDetails} />
+          <Route exact path="/groups/:id/edit" component={EditGroup} />
           <Route exact path="/events" component={Events} />
+          <Route exact path="/events/:id" component={EventDetails} />
         </Switch>
       </div>
     </>

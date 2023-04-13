@@ -10,6 +10,7 @@ export const CLEAR_OPTIONS_EVENTS = {
 
 const LOAD_EVENTS = "events/LOAD_EVENTS";
 const LOAD_GROUP_EVENTS = "events/LOAD_GROUP_EVENTS";
+const LOAD_DETAILS = "events/LOAD_DETAILS";
 const CLEAR_EVENTS = "events/CLEAR_EVENTS";
 
 const loadEvents = (events) => ({
@@ -25,7 +26,13 @@ const loadGroupEvents = (events) => ({
 export const clearEvents = (options) => ({
     type: CLEAR_EVENTS,
     options
-})
+});
+
+const loadDetails = (event) => ({
+    type: LOAD_DETAILS,
+    event
+});
+
 
 
 export const getEvents = () => async (dispatch) => {
@@ -35,6 +42,8 @@ export const getEvents = () => async (dispatch) => {
         const events = await response.json();
         dispatch(loadEvents(events));
     }
+
+    return response;
 };
 
 
@@ -45,13 +54,29 @@ export const getEventsByGroup = (groupId) => async (dispatch) => {
         const events = await response.json();
         dispatch(loadGroupEvents(events));
     }
+
+    return response;
 };
+
+export const getEventDetails = (id) => async (dispatch) => {
+    const response = await csrfFetch(`/api/events/${id}`);
+
+    if (response.ok) {
+        const [event] = await response.json();
+        dispatch(loadDetails(event));
+    }
+
+    return response;
+}
+
+
 
 export const allEventsSelector = (state) => state.events.allEvents;
 export const groupEventsSelector = (state) => state.events.groupEvents;
+export const selEventDetails = (state) => state.events.eventDetails;
 
 
-const initialState = { allEvents: null, groupEvents: null };
+const initialState = { allEvents: null, groupEvents: null, eventDetails: null };
 
 const eventsReducer = (state = initialState, action) => {
     let mutState = Object.assign(state);
@@ -69,6 +94,9 @@ const eventsReducer = (state = initialState, action) => {
             });
 
             return { ...mutState };
+
+        case LOAD_DETAILS:
+            return { ...mutState, eventDetails: action.event };
 
         default:
             return state;

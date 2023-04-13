@@ -11,17 +11,11 @@ export const CLEAR_OPTIONS_GROUPS = {
 const LOAD_GROUPS = 'groups/LOAD_GROUPS';
 const LOAD_GROUP_DETAILS = 'groups/LOAD_GROUP_DETAILS';
 export const CLEAR_GROUPS = 'groups/CLEAR_GROUPS';
-const DELETE_GROUP = 'groups/DELETE_GROUP';
 const NEW_ID = 'groups/NEW_ID';
 
 // action creators
 
 //action creator to load groups
-const deleteOneGroup = (id) => ({
-    type: DELETE_GROUP,
-    id
-})
-
 export const loadGroups = (groups) => ({
     type: LOAD_GROUPS,
     groups
@@ -43,8 +37,6 @@ const newId = (id) => ({
     type: NEW_ID,
     id
 });
-
-
 
 
 //thunk action creator to fetch the /api/groups api
@@ -119,12 +111,27 @@ export const deleteGroup = (id) => async (dispatch) => {
     return response;
 }
 
+export const updateGroup = (id ,group) => async (dispatch) =>{
+    const response = await csrfFetch(`/api/groups/${id}`, {
+        method: 'PUT',
+        body: JSON.stringify(group)
+    });
+
+    if (response.ok) {
+        dispatch(newId(id));
+    }
+
+    return response;
+}
+
 
 
 //selectors
 
 export const allGroupsSelector = (state) => state.groups.allGroups;
 export const groupDetailsSelector = (state) => state.groups.groupDetails;
+export const getGroupById = (id) => (state) => state.groups.allGroups && state.groups.allGroups[id];
+
 
 
 //groups reducer
