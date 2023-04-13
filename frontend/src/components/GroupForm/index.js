@@ -218,7 +218,7 @@ const GroupForm = ({ groupDetails }) => {
 
                 </div>
 
-                <button type="submit" disabled={disabled}>Create Group</button>
+                <button type="submit" disabled={disabled}>{(groupDetails) ? "Update Group" : "Create Group"}</button>
 
             </form>
         </div>
