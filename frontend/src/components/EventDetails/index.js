@@ -69,7 +69,7 @@ const EventDetails = () => {
 
                                 <div className="price">
                                     <i className="fa-regular fa-face-smile" />
-                                    <p>{(event.price > 0) ? event.price.toFixed(2) : "Free"}</p>
+                                    <p>{(event.price > 0) ? Number(event.price).toFixed(2) : "Free"}</p>
                                 </div>
 
                                 <div className="type">
