@@ -22,7 +22,7 @@ const GroupList = () => {
         e.preventDefault();
 
         history.push(`/groups/${id}`);
-    }
+    };
 
 
     return (

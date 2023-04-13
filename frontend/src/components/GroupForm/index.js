@@ -2,8 +2,9 @@
 import { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { createGroup } from "../../store/groups";
+import { createGroup, updateGroup } from "../../store/groups";
 import { clearGroups, CLEAR_OPTIONS_GROUPS } from "../../store/groups";
+
 
 
 const GroupForm = ({ groupDetails }) => {
@@ -24,9 +25,9 @@ const GroupForm = ({ groupDetails }) => {
     // eslint-disable-next-line
     const validateInput = useCallback(() => {
         let mutErr = Array.from(errors);
-        const locValid = (location.match(/.+[,]\s../)) ? true : false;
-        const nameValid = (name.length > 2);
-        const descValid = (description.length > 50);
+        const locValid = (location && location.match(/.+[,]\s../)) ? true : false;
+        const nameValid = (name && name.length > 2);
+        const descValid = (description && description.length > 50);
         const locationMsg = "Location must have format: 'Ventura, CA'";
         const nameMsg = "Name must be at least 2 characters";
         const descMsg = "Description must be at least 50 characters";
@@ -62,14 +63,24 @@ const GroupForm = ({ groupDetails }) => {
             type,
             private: isPrivate
         };
+        if (groupDetails) {
+            dispatch(updateGroup(groupDetails.id, newGroup)).catch(async (res) => {
+                const data = await res.json();
+                if (data && data.errors) {
+                    const err = Object.values(data.errors);
+                    setErrors(err);
+                }
+            });
+        } else {
 
-        dispatch(createGroup(newGroup, imageUrl)).catch(async (res) => {
-            const data = await res.json();
-            if (data && data.errors) {
-                const err = Object.values(data.errors);
-                setErrors(err);
-            }
-        });
+            dispatch(createGroup(newGroup, imageUrl)).catch(async (res) => {
+                const data = await res.json();
+                if (data && data.errors) {
+                    const err = Object.values(data.errors);
+                    setErrors(err);
+                }
+            });
+        }
     };
 
     const onChange = (e) => {
@@ -109,9 +120,15 @@ const GroupForm = ({ groupDetails }) => {
 
     useEffect(() => {
         if (groupDetails) {
-            setLocation(groupDetails.location);
+            const url = groupDetails.GroupImages.filter((image) => image.preview);
+
+            setLocation(groupDetails.city + ", " + groupDetails.state);
             setName(groupDetails.name);
-            setDescription(groupDetails.description);
+            setDescription(groupDetails.about);
+            setType(groupDetails.type);
+            setIsPrivate(groupDetails.private);
+            setImageUrl(url[0].url);
+            setIsUrlValid(true);
         }
     }, [groupDetails]);
 
@@ -126,6 +143,7 @@ const GroupForm = ({ groupDetails }) => {
 
     return (
         <div className="div-group-form">
+            {(groupDetails) ? <h1>Update your group!</h1> : <h1>Start a new group!</h1>}
             <form onSubmit={handleSubmit}>
 
                 <ul >
@@ -195,8 +213,9 @@ const GroupForm = ({ groupDetails }) => {
                         <option value={false}>Public</option>
                     </select>
 
-                    <label htmlFor='add-image'>Please add an image URL foryour group below:</label>
-                    <input type="url" name="add-image" id="add-image" value={imageUrl} onChange={onChange} required={true} />
+                    <label htmlFor='add-image' hidden={groupDetails}>Please add an image URL foryour group below:</label>
+                    <input type="url" name="add-image" id="add-image" hidden={groupDetails} value={imageUrl} onChange={onChange} required={true} />
+
                 </div>
 
                 <button type="submit" disabled={disabled}>Create Group</button>
