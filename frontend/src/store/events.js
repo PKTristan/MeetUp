@@ -69,6 +69,36 @@ export const getEventDetails = (id) => async (dispatch) => {
     return response;
 }
 
+export const createEvent = (event, url) => async (dispatch) => {
+    const response = await csrfFetch("api/events", {
+        method: 'POST',
+        body: JSON.stringify(event)
+    });
+
+    if (response.ok) {
+        const data = response.json();
+        dispatch(addImage({url, preview: true}, data.event.id));
+    }
+
+    return response;
+};
+
+export const addImage = (body, eventId) => async (dispatch) => {
+    const response = await csrfFetch(`/api/events/${eventId}/images`, {
+        method: 'POST',
+        body: JSON.stringify(body)
+    });
+
+    if (response.ok) {
+        // idk do sumn
+    }
+
+    dispatch(getEvents());
+    dispatch(newID(eventId));
+
+    return response;
+};
+
 
 
 export const allEventsSelector = (state) => state.events.allEvents;
