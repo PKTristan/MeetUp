@@ -186,7 +186,7 @@ router.post('/', requireAuthentication, validateEvent, requireAuthorization,
 
             const attendee = await Attendance.requestAttendance({ userId: req.user.id, eventId: event.id, status: 'host' });
 
-            return res.json({event, attendee});
+            return res.status(201).json({event, attendee});
         }
         catch (e) {
             next(e);

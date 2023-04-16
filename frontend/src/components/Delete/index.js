@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { deleteGroup } from "../../store/groups";
 import { useHistory } from "react-router-dom";
 import { useState } from "react";
+import { deleteEvent } from "../../store/events";
 
 const Delete = ({params: {itemName, id}, setIsOpen}) => {
     const dispatch = useDispatch();
@@ -13,16 +14,26 @@ const Delete = ({params: {itemName, id}, setIsOpen}) => {
     const handleYes = (e) => {
         e.preventDefault();
 
-        dispatch(deleteGroup(id)).catch(async (res) => {
-            const data = await res.json();
-            if (data && data.errors) {
-                const err = Object.values(data.errors);
-                setErrors(err);
-            }
-        });
+        if (itemName === 'event') {
+            dispatch(deleteEvent(id)).catch(async (res) => {
+                const data = await res.json();
+                if (data && data.errors) {
+                    const err = Object.values(data.errors);
+                    setErrors(err);
+                }
+            });
+        } else {
+            dispatch(deleteGroup(id)).catch(async (res) => {
+                const data = await res.json();
+                if (data && data.errors) {
+                    const err = Object.values(data.errors);
+                    setErrors(err);
+                }
+            });
+        }
 
         if (errors.length === 0) {
-            history.push('/groups');
+            history.push(`/${itemName}s`);
         }
     };
 

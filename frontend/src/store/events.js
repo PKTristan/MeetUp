@@ -4,7 +4,8 @@ import normalizeData from "./normalizeData";
 
 export const CLEAR_OPTIONS_EVENTS = {
     all: 'allEvents',
-    groups: 'groupEvents'
+    groups: 'groupEvents',
+    newId: 'newId'
 }
 
 
@@ -12,6 +13,7 @@ const LOAD_EVENTS = "events/LOAD_EVENTS";
 const LOAD_GROUP_EVENTS = "events/LOAD_GROUP_EVENTS";
 const LOAD_DETAILS = "events/LOAD_DETAILS";
 const CLEAR_EVENTS = "events/CLEAR_EVENTS";
+const NEW_ID = "events/NEW_ID";
 
 const loadEvents = (events) => ({
     type: LOAD_EVENTS,
@@ -31,6 +33,11 @@ export const clearEvents = (options) => ({
 const loadDetails = (event) => ({
     type: LOAD_DETAILS,
     event
+});
+
+const newId = (id) => ({
+    type: NEW_ID,
+    id
 });
 
 
@@ -69,14 +76,15 @@ export const getEventDetails = (id) => async (dispatch) => {
     return response;
 }
 
-export const createEvent = (event, url) => async (dispatch) => {
-    const response = await csrfFetch("api/events", {
+export const createEvent = (event, groupId, url) => async (dispatch) => {
+    const response = await csrfFetch(`/api/groups/${groupId}/events`, {
         method: 'POST',
         body: JSON.stringify(event)
     });
 
     if (response.ok) {
-        const data = response.json();
+        const data = await response.json();
+        console.log(data);
         dispatch(addImage({url, preview: true}, data.event.id));
     }
 
@@ -94,19 +102,32 @@ export const addImage = (body, eventId) => async (dispatch) => {
     }
 
     dispatch(getEvents());
-    dispatch(newID(eventId));
+    dispatch(newId(eventId));
 
     return response;
 };
+
+export const deleteEvent = (id) => async (dispatch) => {
+    const response = await csrfFetch(`/api/events/${id}`, {
+        method: 'DElETE'
+    });
+
+    if (response.ok) {
+        dispatch(getEvents());
+    }
+
+    return response;
+}
 
 
 
 export const allEventsSelector = (state) => state.events.allEvents;
 export const groupEventsSelector = (state) => state.events.groupEvents;
 export const selEventDetails = (state) => state.events.eventDetails;
+export const selNewId = (state) => state.events.newId;
 
 
-const initialState = { allEvents: null, groupEvents: null, eventDetails: null };
+const initialState = { allEvents: null, groupEvents: null, eventDetails: null, newId: null };
 
 const eventsReducer = (state = initialState, action) => {
     let mutState = Object.assign(state);
@@ -127,6 +148,9 @@ const eventsReducer = (state = initialState, action) => {
 
         case LOAD_DETAILS:
             return { ...mutState, eventDetails: action.event };
+
+        case NEW_ID:
+            return { ...mutState, newId: action.id };
 
         default:
             return state;
