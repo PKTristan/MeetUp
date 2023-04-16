@@ -34,6 +34,12 @@ const GroupInfo = () => {
         history.push(`/groups/${group.id}/edit`);
     };
 
+    const handleCreateEvent = (e) => {
+        e.preventDefault();
+
+        history.push(`/groups/${group.id}/events/new`);
+    };
+
     const isUserOrganizer = (id) => (user && ((id === user.id) || (user.id === 18 && user.email === 'km@sp.com')) );
 
     return (
@@ -49,7 +55,7 @@ const GroupInfo = () => {
                             <h4>{group.numMembers} members &#183; {(group.private) ? 'Private' : 'Public'}</h4>
                             <h4>Organized by: {group.Organizer.firstName} {group.Organizer.lastName}</h4>
 
-                            <button className='logged-in-button' hidden={!isUserOrganizer(group.Organizer.id)} onClick={handleJoinClick}>Create event</button>
+                            <button className='logged-in-button' hidden={!isUserOrganizer(group.Organizer.id)} onClick={handleCreateEvent}>Create event</button>
                             <button className='logged-in-button' hidden={!isUserOrganizer(group.Organizer.id)} onClick={handleUpdate}>Update</button>
                             <InterimModal Component={Delete} buttonLabel="Delete" buttonClass='logged-in-button' isHidden={!isUserOrganizer(group.Organizer.id)} params={{itemName: "group", id: group.id}} />
                             <button className="join-group" hidden={isUserOrganizer(group.Organizer.id)} onClick={handleJoinClick}>Join this group</button>
