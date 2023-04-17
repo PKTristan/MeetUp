@@ -6,23 +6,26 @@ div {
     display: flex;
     flex-direction: row;
     justify-content: right;
-    align-items: center;
-    min-height: 64px;
+    height: 70px;
     list-style: none;
-
+    border-bottom: 2px solid #CCCCCC;
+    padding-left: 20px;
+    padding-right: 20px;
 }
 
+.prof-butt {
+    display:inline-block;
+    vertical-align: middle;
+}
 
-
-.nav-prof-button div {
-    font-size: normal;
-    font-weight: bold;
-    width: 60px;
-
+.fa-user {
+    position: relative;
+    width: 20px;
+    height: 20px;
+    top: 3px;
 }
 
 .nav-bar-links {
-    margin-bottom: 2.5rem;
     font-weight: normal;
 }
 
@@ -43,13 +46,14 @@ p {
     transform: translate(0px, 48px);
     inset: 0px 0px auto auto;
     text-align: left;
-    right: 39px;
-    top: 0px;
+    right: 28px;
+    top: 5px;
     border: 1px solid black;
     box-shadow: 1px 1px 5px black;
     font-size: 14px;
     font-weight: normal;
     padding: 0;
+    background-color: white;
 
 }
 
@@ -70,4 +74,8 @@ p {
 
 li {
     margin: 0px 10px;
+}
+
+.error {
+    margin: 0;
 }

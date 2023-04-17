@@ -1,9 +1,10 @@
 //frontend/src/components/LoginFormPage/index.js
 
 import { useHistory } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as sessionActions from "../../store/session";
+import './SignupForm.css';
 
 const SignupFormPage = () => {
     const dispatch = useDispatch();
@@ -14,8 +15,42 @@ const SignupFormPage = () => {
     const [lastName, setLastName] = useState("");
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
+    const [emailValid, setEmailValid] = useState(false);
     const [password, setPassword] = useState("");
     const [errors, setErrors] = useState([]);
+    const [disabled, setDisabled] = useState(false);
+
+    const validateInput = useCallback(() => {
+        let mutErr = Array.from(errors);
+        const firstVal = (firstName && firstName.length >= 2);
+        const lastVal = (lastName && lastName.length >= 2);
+        const usernameVal = (username && username.length >= 4);
+        const passVal = (password && password.length >= 6);
+        const firstMsg = "First name must be at least 2 characters";
+        const lastMsg = "Last name must be at least 2 characters";
+        const usernameMsg = "Username must be at least 4 characters";
+        const passMsg = "Password must be at least 6 characters";
+        const emailMsg = "Email must be valid. Example: uxOe1@example.com";
+
+        mutErr = mutErr.filter((error) => ((error !== firstMsg) && (error !== passMsg) && (error !== lastMsg) && (error !== usernameMsg) && (error !== emailMsg)));
+
+        if (!firstVal || !passVal || !lastVal || !usernameVal || !emailValid) {
+            if (!disabled) setDisabled(true);
+
+            if (!firstVal) mutErr.push(firstMsg);
+            if (!passVal) mutErr.push(passMsg);
+            if (!lastVal) mutErr.push(lastMsg);
+            if (!usernameVal) mutErr.push(usernameMsg);
+            if (!emailValid) mutErr.push(emailMsg);
+        }
+        else {
+            setDisabled(false);
+        }
+
+        setErrors(mutErr);
+    }, [firstName, lastName, username, emailValid, password]);
+
+    useEffect(() => validateInput(), [firstName, lastName, username, emailValid, password, validateInput]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -28,14 +63,13 @@ const SignupFormPage = () => {
             password
         };
 
-        dispatch(sessionActions.signup(body))
-            .catch((res) => {
-                const data = res.json();
-                if (data && data.errors) {
-                    const err = Object.values(data.errors);
-                    setErrors(err);
-                }
-            });
+        dispatch(sessionActions.signup(body)).catch(async (res) => {
+            const data = await res.json();
+            if (data && data.errors) {
+                const err = Object.values(data.errors);
+                setErrors(err);
+            }
+        });
     };
 
     useEffect(() => {
@@ -44,13 +78,22 @@ const SignupFormPage = () => {
         }
     }, [user, history]);
 
+    const changeEmail = (e) => {
+        e.preventDefault();
+
+        setEmail(e.target.value);
+        setEmailValid(e.target.validity.valid);
+
+    }
+
+
     return (
         <div className="div-signup-form" >
             <h1>Sign up</h1>
             <section className="signup-form">
                 <form onSubmit={handleSubmit}>
                     <ul>
-                        {errors.map((error, idx) => <li key={idx}>{error}</li>)}
+                        {errors.map((error, idx) => <li className="error" key={idx}>{error}</li>)}
                     </ul>
                     <div className="form-group firstname">
                         <input type="text" placeholder="first name" name="firstName" id="firstName" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
@@ -59,7 +102,7 @@ const SignupFormPage = () => {
                         <input type="text" placeholder="last name" name="lastName" id="lastName" value={lastName} onChange={(e) => setLastName(e.target.value)} />
                     </div>
                     <div className="form-group email">
-                        <input type="email" placeholder="email" name="email" id="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+                        <input type="email" placeholder="email" name="email" id="email" value={email} onChange={changeEmail} />
                     </div>
                     <div className="form-group username">
                         <input type="text" placeholder="username" name="username" id="username" value={username} onChange={(e) => setUsername(e.target.value)} />
@@ -68,7 +111,7 @@ const SignupFormPage = () => {
                         <input type="password" placeholder="password" name="password" id="password" value={password} onChange={(e) => setPassword(e.target.value)} />
                     </div>
                     <div className="button-container">
-                        <button type="submit">Sign Up</button>
+                        <button disabled={disabled} type="submit">Sign Up</button>
                     </div>
                 </form>
             </section>

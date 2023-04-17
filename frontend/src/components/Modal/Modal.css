@@ -45,3 +45,7 @@
 .modal input::placeholder {
     color: #666;
 }
+
+ul {
+    padding-left: 0;
+}
