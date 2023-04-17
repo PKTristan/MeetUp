@@ -1,0 +1,27 @@
+.delete-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-left: 0;
+    padding-right: 0;
+    width: 400px;
+}
+
+
+.yes-delete,
+.no-delete {
+    width: 80%;
+    border: 2px solid black;
+    background-color: #FF5A5F;
+    box-shadow: 3px 3px 1px black;
+    color: #fff;
+    margin: 10px;
+    font-size: 1rem;
+}
+
+
+.yes-delete:hover,
+.no-delete:hover {
+    background-color: #999999;
+    cursor: pointer;
+}

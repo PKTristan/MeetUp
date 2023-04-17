@@ -7,6 +7,7 @@ import { NavLink } from "react-router-dom";
 import GroupInfo from "./GroupInfo";
 import EventList from "../Events/EventList";
 import { clearGroups, CLEAR_OPTIONS_GROUPS } from "../../store/groups";
+import './GroupDetails.css';
 
 
 const GroupDetails = () => {
@@ -20,9 +21,11 @@ const GroupDetails = () => {
     }, [id, dispatch]);
 
 
+
+
     return (
         <div className="group-details">
-            <p>{"< "} <NavLink to="/groups">Groups</NavLink></p>
+            <p>{"< "} <NavLink to="/groups" style={{color: "teal"}}>Groups</NavLink></p>
             <GroupInfo />
             <EventList groupId={{id}}/>
         </div>

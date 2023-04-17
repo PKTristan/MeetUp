@@ -27,6 +27,7 @@ div {
 
 .nav-bar-links {
     font-weight: normal;
+    padding-right: 20px;
 }
 
 p {
@@ -68,8 +69,15 @@ p {
 
 .profile-list button{
     background-color: #999999;
+    border: 2px solid black;
+    box-shadow: 3px 3px 1px black;
     color: white;
     margin: 4px;
+}
+
+.profile-list button:hover {
+    background-color: #FF5A5F;
+    cursor: pointer;
 }
 
 li {

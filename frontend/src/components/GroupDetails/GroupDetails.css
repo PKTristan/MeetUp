@@ -1,0 +1,86 @@
+p {
+    font-size: 14pt;
+}
+
+h2 {
+    font-size: 24pt;
+    margin-top: 0;
+    overflow-wrap: normal;
+}
+
+
+.group-location,
+.group-members-type {
+    font-size: 14pt;
+    font-weight: 500;
+}
+
+h4 {
+    font-size: 14pt;
+    font-weight: 400;
+    color: #999999;
+}
+
+.group-details {
+    display: flex;
+    flex-direction: column;
+    margin-left: 1rem;
+    margin-right: 1rem;
+    font-family: Graphik Meetup,
+        -apple-system,
+        BlinkMacSystemFont,
+        Roboto,
+        Helvetica,
+        Arial,
+        sans-serif;
+}
+
+.div-image-group-info {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.group-image {
+    width: 600px;
+    height: 375px;
+}
+
+.group-info {
+    display: flex;
+    flex-direction: column;
+    margin-left: 2.5rem;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+
+.group-info div {
+    margin-bottom: 0;
+}
+
+.join-group {
+    width: 200px;
+    height: 50px;
+    font-size: 16pt;
+    background-color: #FF5A5F;
+    color: white;
+    border: 2px solid black;
+    box-shadow: 2px 2px 2px black;
+}
+
+.join-group:hover {
+background-color: #999999;
+}
+
+.logged-in-button {
+    height: 25px;
+   background-color: #999999;
+   color: white;
+   border: 2px solid black;
+   margin: 5px;
+   box-shadow: 2px 2px 1px black;
+}
+
+.logged-in-button:hover {
+background-color: #FF5A5F;
+}
