@@ -1,14 +1,14 @@
 // /frontend/src/components/Groups/index.js
 import NavTab from "../NavTab";
 import GroupList from "./GroupList";
+import './Groups.css';
 
 
 const Groups = () => {
 
     return (
         <div className="groups-wrapper" >
-            <NavTab />
-            <h3>Groups in Meetup</h3>
+            <NavTab name="Groups" />
             <GroupList />
         </div>
     )

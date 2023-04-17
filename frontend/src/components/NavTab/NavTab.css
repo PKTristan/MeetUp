@@ -1,0 +1,24 @@
+.nav-tab {
+    display: flex;
+    flex-direction: column;
+    border-bottom: 1px solid #ccc;
+}
+
+.links {
+    display: flex;
+    flex-direction: row;
+    font-size: 24pt;
+    font-weight: bold;
+    margin: 0;
+}
+
+.event-nav-tab {
+    padding-right: 20px;
+}
+
+
+.nav-tab p {
+    font-size: 14pt;
+    margin: 0;
+    color: #999999;
+}
