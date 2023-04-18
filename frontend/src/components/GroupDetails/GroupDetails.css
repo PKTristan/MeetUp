@@ -21,6 +21,11 @@ h4 {
     color: #999999;
 }
 
+h3 {
+    color: black;
+    font-weight: 500;
+}
+
 .group-details {
     display: flex;
     flex-direction: column;
