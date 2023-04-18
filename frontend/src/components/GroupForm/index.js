@@ -28,10 +28,10 @@ const GroupForm = ({ groupDetails }) => {
         let mutErr = Array.from(errors);
         const locValid = (location && location.match(/.+[,]\s../)) ? true : false;
         const nameValid = (name && name.length > 2);
-        const descValid = (description && description.length > 50);
+        const descValid = (description && description.length > 29);
         const locationMsg = "Location must have format: 'Ventura, CA'";
         const nameMsg = "Name must be at least 2 characters";
-        const descMsg = "Description must be at least 50 characters";
+        const descMsg = "Description must be at least 30 characters";
         const urlMsg = "Must be valid url: https://example.com/image.png";
         mutErr = mutErr.filter((error) => ((error !== locationMsg) && (error !== nameMsg) && (error !== descMsg) && (error !== urlMsg)));
 
@@ -201,7 +201,7 @@ const GroupForm = ({ groupDetails }) => {
                     <textarea
                         name="description"
                         id="description"
-                        placeholder="Please write at least 50 characters"
+                        placeholder="Please write at least 30 characters"
                         value={description}
                         onChange={onChange}
                     />
