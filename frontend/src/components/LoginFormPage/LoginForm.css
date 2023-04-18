@@ -37,8 +37,8 @@ h1 {
 
 
 .button-container button:enabled {
-    background-color: #e32359;
-    border-color:#e32359;
+    background-color: #FF5A5F;
+    border-color:#FF5A5F;
     color: #fff;
     cursor: pointer;
 }

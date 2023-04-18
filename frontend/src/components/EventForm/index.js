@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback } from "react";
 import { createEvent, selNewId, CLEAR_OPTIONS_EVENTS, clearEvents } from "../../store/events";
 import { useParams, useHistory } from "react-router-dom";
 import { getGroupDetails, groupDetailsSelector } from "../../store/groups";
+import './EventForm.css';
 
 
 
