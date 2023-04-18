@@ -16,6 +16,24 @@ const LoginFormPage = () => {
     const [errors, setErrors] = useState([]);
     const [disabled, setDisabled] = useState(true);
 
+    const demo = (e) => {
+        e.preventDefault();
+
+
+        const user = {
+            credential: "Demo-lition",
+            password: "password"
+        };
+
+        return dispatch(login(user)).catch(async (res) => {
+            const data = await res.json();
+            if (data && data.errors) {
+                const err = Object.values(data.errors);
+                setErrors(err);
+            }
+        });
+    }
+
     const updateCredential = (e) => {
         e.preventDefault();
         setCredential(e.target.value);
@@ -103,6 +121,7 @@ const LoginFormPage = () => {
                     </div>
                     <div className="button-container">
                         <button disabled={disabled} type="submit">Login</button>
+                        <button onClick={demo} type="button">Demo</button>
                     </div>
                 </form>
             </section>
