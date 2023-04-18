@@ -17,6 +17,7 @@ const SignupFormPage = () => {
     const [email, setEmail] = useState("");
     const [emailValid, setEmailValid] = useState(false);
     const [password, setPassword] = useState("");
+    const [confirmPass, setConfirmPass] = useState("");
     const [errors, setErrors] = useState([]);
     const [disabled, setDisabled] = useState(false);
 
@@ -26,15 +27,17 @@ const SignupFormPage = () => {
         const lastVal = (lastName && lastName.length >= 2);
         const usernameVal = (username && username.length >= 4);
         const passVal = (password && password.length >= 6);
+        const confPassVal = (confirmPass && password === confirmPass);
         const firstMsg = "First name must be at least 2 characters";
         const lastMsg = "Last name must be at least 2 characters";
         const usernameMsg = "Username must be at least 4 characters";
         const passMsg = "Password must be at least 6 characters";
         const emailMsg = "Email must be valid. Example: uxOe1@example.com";
+        const confirmPassMsg = "Passwords do not match";
 
-        mutErr = mutErr.filter((error) => ((error !== firstMsg) && (error !== passMsg) && (error !== lastMsg) && (error !== usernameMsg) && (error !== emailMsg)));
+        mutErr = mutErr.filter((error) => ((error !== firstMsg) && (error !== passMsg) && (error !== lastMsg) && (error !== usernameMsg) && (error !== emailMsg) && (error !== confirmPassMsg)));
 
-        if (!firstVal || !passVal || !lastVal || !usernameVal || !emailValid) {
+        if (!firstVal || !passVal || !lastVal || !usernameVal || !emailValid || !confPassVal) {
             if (!disabled) setDisabled(true);
 
             if (!firstVal) mutErr.push(firstMsg);
@@ -42,15 +45,16 @@ const SignupFormPage = () => {
             if (!lastVal) mutErr.push(lastMsg);
             if (!usernameVal) mutErr.push(usernameMsg);
             if (!emailValid) mutErr.push(emailMsg);
+            if (!confPassVal) mutErr.push(confirmPassMsg);
         }
         else {
             setDisabled(false);
         }
 
         setErrors(mutErr);
-    }, [firstName, lastName, username, emailValid, password]);
+    }, [firstName, lastName, username, emailValid, password, confirmPass]);
 
-    useEffect(() => validateInput(), [firstName, lastName, username, emailValid, password, validateInput]);
+    useEffect(() => validateInput(), [firstName, lastName, username, emailValid, password, confirmPass, validateInput]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -109,6 +113,9 @@ const SignupFormPage = () => {
                     </div>
                     <div className="form-group password">
                         <input type="password" placeholder="password" name="password" id="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+                    </div>
+                    <div className="form-group password-confirm">
+                        <input type="password" placeholder="confirm password" name="password" id="password" value={confirmPass} onChange={(e) => setConfirmPass(e.target.value)} />
                     </div>
                     <div className="button-container">
                         <button disabled={disabled} type="submit">Sign Up</button>
