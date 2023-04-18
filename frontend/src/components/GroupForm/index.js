@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { createGroup, updateGroup } from "../../store/groups";
 import { clearGroups, CLEAR_OPTIONS_GROUPS } from "../../store/groups";
+import './GroupForm.css';
 
 
 
@@ -27,10 +28,10 @@ const GroupForm = ({ groupDetails }) => {
         let mutErr = Array.from(errors);
         const locValid = (location && location.match(/.+[,]\s../)) ? true : false;
         const nameValid = (name && name.length > 2);
-        const descValid = (description && description.length > 50);
+        const descValid = (description && description.length > 29);
         const locationMsg = "Location must have format: 'Ventura, CA'";
         const nameMsg = "Name must be at least 2 characters";
-        const descMsg = "Description must be at least 50 characters";
+        const descMsg = "Description must be at least 30 characters";
         const urlMsg = "Must be valid url: https://example.com/image.png";
         mutErr = mutErr.filter((error) => ((error !== locationMsg) && (error !== nameMsg) && (error !== descMsg) && (error !== urlMsg)));
 
@@ -140,13 +141,17 @@ const GroupForm = ({ groupDetails }) => {
         return () => dispatch(clearGroups([CLEAR_OPTIONS_GROUPS.newId]));
     }, [history, newId, dispatch]);
 
+    const blackText = {
+        color: "black"
+    };
+
 
     return (
         <div className="div-group-form">
             {(groupDetails) ? <h1>Update your group!</h1> : <h1>Start a new group!</h1>}
             <form onSubmit={handleSubmit}>
 
-                <ul >
+                <ul  hidden={errors.length < 1}>
                     {errors.map((error, idx) => <li className="error" key={idx}>{error}</li>)}
                 </ul>
 
@@ -187,35 +192,43 @@ const GroupForm = ({ groupDetails }) => {
                     <p>
                         People will see this when we promote your group,
                         but you'll be able to add to it later, too.
-                        1. What's the purpose of the group?
-                        2. Who should join?
-                        3. What will you do at your events?
                     </p>
+                    <ol>
+                        <li>What's the purpose of the group?</li>
+                        <li>Who should join?</li>
+                        <li>What will you do at your events?</li>
+                    </ol>
                     <textarea
                         name="description"
                         id="description"
-                        placeholder="Please write at least 50 characters"
+                        placeholder="Please write at least 30 characters"
                         value={description}
                         onChange={onChange}
                     />
                 </div>
 
                 <div className="section4">
-                    <label htmlFor="select-type">Is this an in-person or online group?</label>
-                    <select name="select-type" id="select-type" value={type} onChange={onChange}>
-                        <option >In Person</option>
-                        <option >Online</option>
-                    </select>
+                    <div>
+                        <label htmlFor="select-type" style={blackText}>Is this an in-person or online group?</label>
+                        <select name="select-type" id="select-type" value={type} onChange={onChange}>
+                            <option >In Person</option>
+                            <option >Online</option>
+                        </select>
 
-                    <label htmlFor="select-private">Is this group private or public?</label>
-                    <select name="select-private" id="select-private" value={isPrivate} onChange={onChange}>
-                        <option value={true}>Private</option>
-                        <option value={false}>Public</option>
-                    </select>
+                    </div>
 
-                    <label htmlFor='add-image' hidden={groupDetails}>Please add an image URL foryour group below:</label>
-                    <input type="url" name="add-image" id="add-image" hidden={groupDetails} value={imageUrl} onChange={onChange} required={true} />
+                    <div>
+                        <label htmlFor="select-private" style={blackText}>Is this group private or public?</label>
+                        <select name="select-private" id="select-private" value={isPrivate} onChange={onChange}>
+                            <option value={true}>Private</option>
+                            <option value={false}>Public</option>
+                        </select>
+                    </div>
 
+                    <div>
+                        <label htmlFor='add-image' hidden={groupDetails} style={blackText}>Please add an image URL for your group below:</label>
+                        <input type="url" name="add-image" id="add-image" hidden={groupDetails} value={imageUrl} onChange={onChange} required={true} />
+                    </div>
                 </div>
 
                 <button type="submit" disabled={disabled}>{(groupDetails) ? "Update Group" : "Create Group"}</button>

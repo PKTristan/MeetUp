@@ -1,5 +1,20 @@
 /* TODO Add site wide styles */
 
+h1 {
+    font-size: 24pt;
+    font-weight: bold;
+}
+
+
+h2 {
+    font-size: 18pt;
+    font-weight: bold;
+}
+
+p, label {
+    font-size: 14pt;
+    font-weight: normal;
+}
 
 body {
     font-family: Graphik Meetup,
@@ -30,6 +45,7 @@ button {
     font-size: normal;
     text-align: center;
 
+
 }
 
 button:hover {
@@ -38,6 +54,9 @@ button:hover {
 
 ul .error  {
     color: red;
+    width: 100%;
+    font-style: italic;
+    padding-bottom: 10px;
 }
 
 ul {

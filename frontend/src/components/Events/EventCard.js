@@ -24,7 +24,9 @@ const EventCard = ({ event }) => {
     return (
         <div className="event-card" onClick={handleClick(event.id)}>
             <div className="event-card-top">
-                <img src={event.previewImage} alt={event.name} />
+                <div className="div-img">
+                    <img src={event.previewImage} alt={event.name} />
+                </div>
                 <div className="event-card-info">
                     <label className="event-date">{date} &#183; {time}</label>
                     <h3 className='event-title'>{event.name}</h3>

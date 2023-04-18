@@ -1,0 +1,68 @@
+.div-group-form {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    margin-right: 200px;
+    margin-left: 200px;
+}
+
+.div-group-form div, .div-group-form ul {
+    border-bottom: 1px solid rgb(102, 102, 102);
+    padding-bottom: 10px;
+}
+
+.section4 label,
+.section4 input,
+.section4 select {
+    display: block;
+}
+
+.div-group-form h1 {
+    color: black;
+    font-size: 24pt;
+}
+
+.div-group-form h4 {
+    color: black;
+    font-size: 18pt;
+    font-weight: bold;
+}
+
+.section4 div {
+    border: none;
+}
+
+.div-group-form input {
+    width: 400px;
+    border: 2px solid black;
+}
+
+.div-group-form textarea {
+    width: 400px;
+    border: 2px solid black;
+}
+
+.div-group-form select {
+    width: 100px;
+    border: 2px solid black;
+}
+
+.div-group-form button {
+    font-size: 16pt;
+    color: white;
+    background-color: #FF5A5F;
+    border: 2px solid black;
+    box-shadow: 3px 3px 1px black;
+}
+
+.div-group-form button:hover {
+    background-color: #999999;
+}
+
+.div-group-form form {
+    border-top: 1px solid rgb(102, 102, 102);
+}
+
+.div-group-form p {
+    width: 50%;
+}

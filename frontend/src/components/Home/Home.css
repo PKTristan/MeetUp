@@ -104,13 +104,15 @@
 }
 
 .section4 button {
-    border-radius: 8px;
     cursor: pointer;
+    font-size: 18pt;
     color: #fff;
     fill: #fff;
+    border: 2px solid black;
+    box-shadow: 2px 2px 1px black;
     padding: 8px 16px;
     background-color: #00798a;
-    border-color: #00798a;
+
 }
 
 .section4 button:hover {

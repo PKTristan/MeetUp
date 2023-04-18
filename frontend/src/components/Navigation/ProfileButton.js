@@ -18,8 +18,8 @@ const ProfileButton = () => {
 
     return (
         <>
-            <button type='button' onClick={iconClick} >
-                <i className="fa-regular fa-face-smile" />
+            <button type='button' className="prof-butt" onClick={iconClick} >
+                <i className="fa-solid fa-user" />
             </button>
             <ProfileList args={{dropdown, setDropdown}}/>
         </>

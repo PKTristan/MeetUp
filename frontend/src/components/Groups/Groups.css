@@ -1,0 +1,51 @@
+.groups-wrapper {
+    display: flex;
+    flex-direction: column;
+    margin-left: auto;
+    margin-right: auto;
+    width: 900px;
+
+}
+
+.group-list-item {
+    display: flex;
+    border-bottom: 1px solid #ccc;
+    justify-content: space-between;
+    padding-top: 1rem;
+    margin-bottom: 0;
+}
+
+.group-list-item:hover {
+    cursor: pointer;
+}
+
+.group-img {
+    width: 300px;
+    height: 200px;
+}
+
+.div-img {
+    margin-bottom: 0;
+    width: 400px;
+    height: 200px;
+}
+
+.group-info {
+    width: 500px;
+    margin-bottom: 0;
+}
+
+h2 {
+    font-size: 18pt;
+}
+
+h3 {
+    font-size: 14pt;
+    font-weight: normal;
+    color: #999999;
+}
+
+p {
+    font-size: 14pt;
+    overflow-wrap: break-word;
+}

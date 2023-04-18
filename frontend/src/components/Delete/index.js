@@ -5,6 +5,7 @@ import { deleteGroup } from "../../store/groups";
 import { useHistory } from "react-router-dom";
 import { useState } from "react";
 import { deleteEvent } from "../../store/events";
+import './Delete.css';
 
 const Delete = ({params: {itemName, id}, setIsOpen}) => {
     const dispatch = useDispatch();
@@ -47,10 +48,9 @@ const Delete = ({params: {itemName, id}, setIsOpen}) => {
         <div className='delete-container'>
             <h1>Confirm Delete</h1>
             <p>Are you sure you want to remove this {itemName}?</p>
-            <div className='delete-buttons'>
                 <button className='yes-delete' onClick={handleYes}>Yes (Delete {itemName})</button>
                 <button className='no-delete' onClick={handleNo}>No (Keep {itemName})</button>
-            </div>
+
         </div>
     );
 };

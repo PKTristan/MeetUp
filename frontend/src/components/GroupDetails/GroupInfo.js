@@ -40,31 +40,35 @@ const GroupInfo = () => {
         history.push(`/groups/${group.id}/events/new`);
     };
 
-    const isUserOrganizer = (id) => (user && ((id === user.id) || (user.id === 18 && user.email === 'km@sp.com')) );
+    const isUserOrganizer = (id) => (user && ((id === user.id) || (user.id === 18 && user.email === 'km@sp.com')));
 
     return (
         <>
-            { isLoaded ?
+            {isLoaded ?
                 < div className="group-details" >
                     <div className='div-image-group-info'>
-                        <img src={(group.GroupImages.length > 0) ? group.GroupImages[0].url : ""} alt="Group" />
+                        <img className="group-image" src={(group.GroupImages.length > 0) ? group.GroupImages[0].url : ""} alt="Group" />
 
                         <div className="group-info">
-                            <h2>{group.name}</h2>
-                            <h4>{group.city}, {group.state}</h4>
-                            <h4>{group.numMembers} members &#183; {(group.private) ? 'Private' : 'Public'}</h4>
-                            <h4>Organized by: {group.Organizer.firstName} {group.Organizer.lastName}</h4>
+                            <div>
+                                <h2>{group.name}</h2>
+                                <h4>{group.city}, {group.state}</h4>
+                                <h4>{group.numMembers} members &#183; {(group.private) ? 'Private' : 'Public'}</h4>
+                                <h4>Organized by: {group.Organizer.firstName} {group.Organizer.lastName}</h4>
+                            </div>
 
-                            <button className='logged-in-button' hidden={!isUserOrganizer(group.Organizer.id)} onClick={handleCreateEvent}>Create event</button>
-                            <button className='logged-in-button' hidden={!isUserOrganizer(group.Organizer.id)} onClick={handleUpdate}>Update</button>
-                            <InterimModal Component={Delete} buttonLabel="Delete" buttonClass='logged-in-button' isHidden={!isUserOrganizer(group.Organizer.id)} params={{itemName: "group", id: group.id}} />
-                            <button className="join-group" hidden={isUserOrganizer(group.Organizer.id)} onClick={handleJoinClick}>Join this group</button>
+                            <div className="buttons">
+                                <button className='logged-in-button' hidden={!isUserOrganizer(group.Organizer.id)} onClick={handleCreateEvent}>Create event</button>
+                                <button className='logged-in-button' hidden={!isUserOrganizer(group.Organizer.id)} onClick={handleUpdate}>Update</button>
+                                <InterimModal Component={Delete} buttonLabel="Delete" buttonClass='logged-in-button' isHidden={!isUserOrganizer(group.Organizer.id)} params={{ itemName: "group", id: group.id }} />
+                                <button className="join-group" hidden={isUserOrganizer(group.Organizer.id)} onClick={handleJoinClick}>Join this group</button>
+                            </div>
                         </div>
                     </div>
                     <div className="group-about">
                         <h2>Organizer</h2>
                         <h4>{group.Organizer.firstName} {group.Organizer.lastName}</h4>
-                        <h2>What we're about</h2>
+                        <h3>What we're about</h3>
                         <p>{group.about}</p>
                     </div>
                 </div >
