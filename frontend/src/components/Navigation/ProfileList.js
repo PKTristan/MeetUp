@@ -47,6 +47,8 @@ const ProfileList = ({ args: { dropdown, setDropdown }}) => {
                 <ul className={ulClassName} ref={ref} >
                     <li>
                         <button type='button' onClick={handleHome}>Home</button>
+                        <button type='button' onClick={() => history.push('/groups')}>Groups</button>
+                        <button type='button' onClick={() => history.push('/events')}>Events</button>
                     </li>
                     <li className="prof-list-buttons">
                         <InterimModal Component={LoginFormPage} buttonLabel="Login" />
@@ -65,8 +67,9 @@ const ProfileList = ({ args: { dropdown, setDropdown }}) => {
                     <li>{user.firstName} {user.lastName}</li>
                     <li>{user.email}</li>
                     <li className="prof-list-buttons">
-                        <button type='button' onClick={handleHome}>Home</button>
                         <button type='button' onClick={handleLogout}>Log Out</button>
+                        <button type='button' onClick={() => history.push('/groups')}>Groups</button>
+                        <button type='button' onClick={() => history.push('/events')}>Events</button>
                     </li>
 
                 </ul>
